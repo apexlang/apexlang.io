@@ -1,0 +1,98 @@
+---
+sidebar_position: 2
+---
+
+import Link from '@docusaurus/Link';
+
+# Getting started
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Installation
+
+### CLI
+
+The command line interface is a single binary that generates code from Apex documents.
+While it uses TypeScript for code generation, Node.js is not required. The Apex CLI is installed from the terminal/command prompt by executing the command below.
+
+export const os = () => {
+  if (navigator.platform.substring('Mac') != 1) {
+    return "macos"
+  }
+  if (navigator.platform.substring('Linux') != 1) {
+    return "linux"
+  }
+  return "windows"
+}
+
+<Tabs
+  defaultValue={os()}
+  values={[
+    {label: 'Windows', value: 'windows'},
+    {label: 'MacOS', value: 'macos'},
+    {label: 'Linux', value: 'linux'},
+    {label: 'Homebrew', value: 'homebrew'},
+  ]}>
+  <TabItem value="windows">
+
+```shell
+powershell -Command "iwr -useb https://raw.githubusercontent.com/apexlang/cli/main/install/install.ps1 | iex"
+```
+
+  </TabItem>
+  <TabItem value="macos">
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/apexlang/cli/main/install/install.sh | /bin/bash
+```
+
+  </TabItem>
+  <TabItem value="linux">
+
+```shell
+wget -q https://raw.githubusercontent.com/apexlang/cli/main/install/install.sh -O - | /bin/bash
+```
+
+  </TabItem>
+  <TabItem value="homebrew">
+
+```shell
+brew install apexlang/tap/apex
+```
+
+  </TabItem>
+</Tabs>
+
+The scripts download the latest release and copies the binary into your PATH. You can also install manually from [releases](https://github.com/apexlang/cli/releases) or build from source from this [GitHub repo](https://github.com/apexlang/cli).
+
+### VS Code extension
+
+Installing this extension is **recommended** but not required. It enables the following features while editing Apex documents:
+
+* Syntax highlighting
+* Completions
+* Parsing and validation checks
+* Go to definition
+
+Search for `apexlang` in the extension marketplace and click "Install". You can also build from source from this [GitHub repo](https://github.com/apexlang/vscode-extension).
+
+![VS Code extension](@site/static/img/vs-code-extension-install.png)
+
+### Next steps
+
+Now your environment supercharged for cloud-native applcation development!
+
+<div>
+  <Link
+    className="button button--secondary button--lg"
+    to="/docs/specification">
+    Learn the language - 15min ⏱️
+  </Link>
+  &nbsp;&nbsp;or&nbsp;&nbsp;
+  <Link
+    className="button button--secondary button--lg"
+    to="/docs/tutorial-basics/create-a-page">
+    Begin the tutorial
+  </Link>
+</div>
