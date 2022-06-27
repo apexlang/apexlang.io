@@ -24,6 +24,14 @@
   background-image: url("@site/static/img/logo-vertical-dark.svg");
 }
 
+.tagLine {
+  font-size: 3rem;
+}
+
+.separatorText {
+  color: #449496;
+}
+
 .buttons {
   display: flex;
   align-items: left;
@@ -42,6 +50,11 @@
     margin: 0 auto;
     float: none;
     position: static;
+  }
+
+  .tagLine {
+    margin-top: 2rem;
+    font-size: 2rem;
   }
 
   .buttons {
