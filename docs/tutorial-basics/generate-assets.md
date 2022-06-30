@@ -23,7 +23,7 @@ If `config` is not specifed, the CLI will look for the configuration file at `ap
 
 Running `apex generate apex.yaml` will create `openapi.yaml` containing the OpenAPI specification.
 
-```openapi title="openapi.yaml" showLineNumbers
+```yaml title="openapi.yaml" showLineNumbers
 swagger: '2.0'
 info:
   title: Simple URL shortener API
@@ -84,7 +84,7 @@ definitions:
       - url
 ```
 
-Apex is not just a single purpose generator. You can make it generate pretty much anything. In addition to OpenAPI, lets add a `.proto` file for gRPC.
+In addition to OpenAPI, lets add a `.proto` file for gRPC. Add `GRPCVisitor` to generate `service.proto`.
 
 ```yaml title="apex.yaml" showLineNumbers
 spec: spec.apexlang
@@ -98,5 +98,31 @@ generates:
     visitorClass: GRPCVisitor
   // highlight-end
 ```
+
+That should produce this proto file.
+
+```protobuf title="service.proto" showLineNumbers
+syntax = "proto3";
+
+package urlshortener.v1;
+
+// The URL shortening service.
+service Shortener {
+  // Shorten a URL and return a generated identifier.
+  rpc Shorten(ShortenRequest) returns (URL);
+  // Return the URL using the generated identifier.
+  rpc Lookup(LookupRequest) returns (URL);
+}
+
+// URL encapsulates the dynamic identifier and the URL it points to.
+message Url {
+  // The dynamically generated URL identifier.
+  string id = 1;
+  // The original URL that was shortened.
+  string url = 2;
+}
+```
+
+Apex is not just a single purpose generator. You can make it generate pretty much anything.
 
 If you are curious about other things that can be generated, view the [built-in generators](/docs/category/generators).
