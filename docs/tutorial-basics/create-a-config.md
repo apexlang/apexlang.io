@@ -1,62 +1,43 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 ---
 
-# Create a Config
+# Create a Configuration
 
-Add **Markdown or React** files to `src/pages` to create a **standalone page**:
+An Apex configuration is YAML that defines which files are generated and by which module. The structure of configuration file is conveyed in Apex below.
 
-- `src/pages/index.js` -> `localhost:3000/`
-- `src/pages/foo.md` -> `localhost:3000/foo`
-- `src/pages/foo/bar.js` -> `localhost:3000/foo/bar`
+```apexlang
+"The top level elements of the configuration."
+type Configuration {
+  "The path to the apex specification file."
+  schema: string,
+  "Global configuration settings available to all targets (optional)."
+  config: {string: any}?,
+  "The map of target files to generate and their settings."
+  generates: {string: Target}
+}
+
+"The configuration for how a target file is generated."
+type Target {
+  "The TypeScript module containing the visitor class."
+  module: string,
+  "The name of the exported visitor class that generates the file contents."
+  visitorClass: string,
+  "When true, the file is only generated if it does not exist. This is useful for scafolded files."
+  ifNotExists: boolean = false,
+  "Target-level configuration (optional)."
+  config: {string: any}?
+}
+```
 
 ## Create your first Apex configuration
 
-Create a file at `apex.yaml`:
+A common task with regard to API and microservice development is sharing OpenAPI specifications with other teams. In this net step, we will generate the specification for our **URL Shortener** service. In the root of your `urlshortener` directory, create a file named `apex.yaml`:
 
 ```yaml title="apex.yaml"
-spec: spec.apex
-config:
-  module: github.com/nanobus/examples/urlshortener
-  package: urlshortener
-  aliases:
-    UUID:
-      type: types.UUID
-      import: github.com/nanobus/adapter-go/types
-    datetime:
-      type: types.Time
-      import: github.com/nanobus/adapter-go/types
+spec: spec.apexlang
 generates:
-  cmd/main.go:
-    ifNotExists: false
-    module: '@nanobus/codegen/go'
-    visitorClass: EntryPointVisitor
-  pkg/urlshortener/adapter.go:
-    module: '@nanobus/codegen/go'
-    visitorClass: AdapterVisitor
-  pkg/urlshortener/interfaces.go:
-    module: '@nanobus/codegen/go'
-    visitorClass: InterfacesVisitor
-  pkg/urlshortener/service.go:
-    ifNotExists: true
-    module: '@nanobus/codegen/go'
-    visitorClass: ScaffoldVisitor
-  bus.yaml:
-    ifNotExists: true
-    module: '@nanobus/codegen/bus'
-    visitorClass: BusVisitor
+  openapi.yaml:
+    module: '@apexlang/codegen/openapiv3'
+    visitorClass: OpenAPIV3Visitor
 ```
-
-A new page is now available at `http://localhost:3000/my-react-page`.
-
-## Create your first Markdown Page
-
-Create a file at `src/pages/my-markdown-page.md`:
-
-```mdx title="src/pages/my-markdown-page.md"
-# My Markdown page
-
-This is a Markdown page
-```
-
-A new page is now available at `http://localhost:3000/my-markdown-page`.

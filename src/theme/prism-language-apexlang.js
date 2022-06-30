@@ -12,6 +12,13 @@ Prism.languages.apexlang = {
 			}
 		}
 	},
+	'function': {
+		// new include style
+		pattern: /\bimport\s*(?:"[^"\r\n]*"|'[^'\r\n]*')/,
+		inside: {
+			'string': /"[^"\r\n]*"|'[^'\r\n]*'/,
+		},
+	},
 	'string': {
 		pattern: /"""(?:[^"]|(?!""")")*"""|"(?:\\.|[^\\"\r\n])*"/,
 		greedy: true
@@ -37,7 +44,7 @@ Prism.languages.apexlang = {
 		pattern: /(\b(?:enum|implements|interface|on|role|scalar|type|union)\s+|&\s*|:\s*|\[)[A-Z_]\w*/,
 		lookbehind: true
 	},
-	'keyword': /\b(?:namespace|directive|enum|implements|interface|on|role|type|union)\b/,
+	'keyword': /\b(?:import|namespace|directive|enum|implements|interface|on|role|type|union)\b/,
 	'operator': /[!=|&]|\.{3}/,
 	'property-query': /\w+(?=\s*\()/,
 	'object': /\w+(?=\s*\{)/,
