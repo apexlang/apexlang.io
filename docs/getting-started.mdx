@@ -8,6 +8,7 @@ import Link from '@docusaurus/Link';
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import useIsBrowser from '@docusaurus/useIsBrowser';
 
 ## Installation
 
@@ -17,10 +18,12 @@ The command line interface is a single binary that generates code from Apex docu
 While it uses TypeScript for code generation, Node.js is not required. The Apex CLI is installed from the terminal/command prompt by executing the command below.
 
 export const os = () => {
-  if (navigator.platform.substring('Mac') != 1) {
+  const isBrowser = useIsBrowser();
+  const platform = isBrowser ? navigator.platform : '';
+  if (platform.substring('Mac') != 1) {
     return "macos"
   }
-  if (navigator.platform.substring('Linux') != 1) {
+  if (platform.substring('Linux') != 1) {
     return "linux"
   }
   return "windows"
