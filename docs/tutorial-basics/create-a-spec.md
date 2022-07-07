@@ -45,16 +45,6 @@ role Shortener @service @uses(["Repository"]) {
     @GET @path("/{id}")
 }
 
-"Repository handles loading and storing shortened URLs."
-role Repository @dependency {
-  "Load the URL by its identifier."
-  loadById(id: string): URL
-  "Load the ID by its URL."
-  loadByURL(url: string): URL
-  "Store a URL and its identifier."
-  storeURL{url: URL}
-}
-
 "URL encapsulates the dynamic identifier and the URL it points to."
 type URL {
   "The dynamically generated URL identifier."

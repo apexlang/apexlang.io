@@ -24,65 +24,87 @@ If `config` is not specifed, the CLI will look for the configuration file at `ap
 Running `apex generate apex.yaml` will create `openapi.yaml` containing the OpenAPI specification.
 
 ```yaml title="openapi.yaml" showLineNumbers
-swagger: '2.0'
+openapi: 3.1.0
 info:
   title: Simple URL shortener API
   description: Simple API for shortening URLs created using Apex.
   version: 1.0.0
-  termsOfService: 'https://api.goodcorp.com/terms/'
+  termsOfService: https://api.goodcorp.com/terms/
   contact:
     name: API Support
-    url: 'https://api.goodcorp.com/support'
+    url: https://api.goodcorp.com/support
     email: api@goodcorp.com
   license:
     name: Apache 2.0
-    url: 'https://www.apache.org/licenses/LICENSE-2.0'
-host: api.goodcorp.com
-basePath: /v1
+    url: https://www.apache.org/licenses/LICENSE-2.0
 paths:
-  /shorten:
+  /v1/shorten:
     put:
       operationId: shorten
+      summary: Shorten a URL and return a generated identifier.
       description: Shorten a URL and return a generated identifier.
-      parameters:
-        - name: url
-          in: body
-          required: true
-          type: string
       responses:
-        '200':
+        default:
           description: Success
-          schema:
-            $ref: '#/definitions/URL'
-  '/{id}':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/URL"
+      tags:
+        - Shortener
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                url:
+                  type: string
+              required:
+                - url
+        required: true
+  "/v1/{id}":
     get:
       operationId: lookup
+      summary: Return the URL using the generated identifier.
       description: Return the URL using the generated identifier.
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/URL"
+      tags:
+        - Shortener
       parameters:
         - name: id
           in: path
           required: true
-          type: string
-      responses:
-        '200':
-          description: Success
           schema:
-            $ref: '#/definitions/URL'
-definitions:
-  URL:
-    description: URL encapsulates the dynamic identifier and the URL it points to.
-    type: object
-    properties:
-      id:
-        description: The dynamically generated URL identifier.
-        type: string
-      url:
-        description: The original URL that was shortened.
-        type: string
-    required:
-      - id
-      - url
+            type: string
+components:
+  schemas:
+    URL:
+      description: URL encapsulates the dynamic identifier and the URL it points to.
+      type: object
+      properties:
+        id:
+          description: The dynamically generated URL identifier.
+          type: string
+        url:
+          description: The original URL that was shortened.
+          type: string
+      required:
+        - id
+        - url
+tags:
+  - name: Shortener
+    description: The URL shortening service.
+servers:
+  - url: https://api.goodcorp.com
 ```
+
+Approximately 40 lines of Apex generates around 80 lines of OpenAPI YAML.
 
 In addition to OpenAPI, lets add a `.proto` file for gRPC. Add `GRPCVisitor` to generate `service.proto`.
 
@@ -96,6 +118,9 @@ generates:
   service.proto:
     module: '@apexlang/codegen/grpc'
     visitorClass: GRPCVisitor
+    config:
+      options:
+        go_package: "github.com/myorg/myapps/pkg/urlshortener"
   // highlight-end
 ```
 
@@ -106,20 +131,36 @@ syntax = "proto3";
 
 package urlshortener.v1;
 
+option go_package = "github.com/myorg/myapps/pkg/urlshortener";
+
+import "google/protobuf/empty.proto";
+
 // The URL shortening service.
 service Shortener {
   // Shorten a URL and return a generated identifier.
-  rpc Shorten(ShortenRequest) returns (URL);
+  rpc Shorten(ShortenArgs) returns (URL) {};
   // Return the URL using the generated identifier.
-  rpc Lookup(LookupRequest) returns (URL);
+  rpc Lookup(LookupArgs) returns (URL) {};
+  // My empty test operation.
+  rpc Test(google.protobuf.Empty) returns (google.protobuf.Empty) {};
+  // Unary operation
+  rpc Url(URL) returns (google.protobuf.Empty) {};
 }
 
 // URL encapsulates the dynamic identifier and the URL it points to.
-message Url {
+message URL {
   // The dynamically generated URL identifier.
   string id = 1;
   // The original URL that was shortened.
   string url = 2;
+}
+
+message ShortenArgs {
+  string url = 1;
+}
+
+message LookupArgs {
+  string id = 1;
 }
 ```
 
