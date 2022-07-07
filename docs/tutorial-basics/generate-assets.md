@@ -19,7 +19,7 @@ Arguments:
   [<config>]    The code generation configuration file
 ```
 
-If `config` is not specifed, the CLI will look for the configuration file at `apex.yaml` in the current directory.
+If `config` is not specified, the CLI will look for the configuration file at `apex.yaml` in the current directory.
 
 Running `apex generate apex.yaml` will create `openapi.yaml` containing the OpenAPI specification.
 
@@ -124,7 +124,7 @@ generates:
   // highlight-end
 ```
 
-That should produce this proto file.
+This produces the proto file below.
 
 ```protobuf title="service.proto" showLineNumbers
 syntax = "proto3";
