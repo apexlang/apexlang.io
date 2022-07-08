@@ -27,6 +27,16 @@ type Target {
   ifNotExists: boolean = false,
   "Target-level configuration (optional)."
   config: {string: any}?
+  "Commands to execute that relate to this target (e.g., other code generation tools)."
+  runAfter: [Command]?
+}
+
+"A command to execute after code generator."
+type Command {
+  "The command to execute."
+  command: string
+  "The working directory (optional - default is the current directory)."
+  dir: string?
 }
 ```
 
@@ -41,3 +51,5 @@ generates:
     module: '@apexlang/codegen/openapiv3'
     visitorClass: OpenAPIV3Visitor
 ```
+
+Using `config`, `ifNotExists`, and `runAfter` will be demonstrated later in this tutorial.

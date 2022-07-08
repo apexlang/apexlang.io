@@ -53,3 +53,15 @@ type URL {
   url: string @n(2) @rename({go: "URL"})
 }
 ```
+
+## What's happening here?
+
+Let's summarize what is captured in the **URL Shortener** service specification above.
+
+* The `import` statements include directives, which adds strong typing to specific annotations, to assist in generating RESTful services with OpenAPI documentation as well as gRPC interfaces.
+* The `namespace` identifies the scope of the components in the specification. In this case, it also includes several annotations required for the generated OpenAPI specification.
+* `Shortener` with the `@service` is a components which will expose its operations for REST and gRPC.
+* `URL` is the data structure returned by the operations in `Shortener`. The `@n` annotations on fields and parameters specify the field number and required for serialization formats like Protobuf. The `@rename` annotation is used to override the field name to fit the naming standards of a language.
+* Every role, operation, type, and field has a description (enclosed in "") which passes through to generated files. For generated code, these descriptions are available inside your IDE.
+
+This example highlights common elements you will use in your own specifications. If you are curious if you can create your own imports and directives, the answer is Yes! Apex is designed for extensibility. That will be covered later in [custom generators](/docs/tutorial-extras/custom-generators.md).
