@@ -1,8 +1,9 @@
 ---
 sidebar_position: 1
+title: Create an Apex Spec
 ---
 
-# Create a Specification
+# Create an Apex Specification
 
 In this tutorial, you will be creating a specification for a very simple **URL Shortener** service. This specification will include extensions for generation of OpenAPI v3 and gRPC proto documents.
 
@@ -31,7 +32,7 @@ namespace "urlshortener.v1"
       url: "https://www.apache.org/licenses/LICENSE-2.0"
     }
   )
-  @host("api.goodcorp.com")
+  @server(url: "https://api.goodcorp.com")
   @path("/v1")
 
 "The URL shortening service."
@@ -43,6 +44,16 @@ role Shortener @service @uses(["Repository"]) {
   "Return the URL using the generated identifier."
   lookup(id: string @n(1)): URL
     @GET @path("/{id}")
+}
+
+"Repository handles loading and storing shortened URLs."
+role Repository @dependency {
+  "Load the URL by its identifier."
+  loadById(id: string): URL
+  "Load the ID by its URL."
+  loadByURL(url: string): URL
+  "Store a URL and its identifier."
+  storeURL{url: URL}
 }
 
 "URL encapsulates the dynamic identifier and the URL it points to."
@@ -60,7 +71,8 @@ Let's summarize what is captured in the **URL Shortener** service specification 
 
 * The `import` statements include directives, which adds strong typing to specific annotations, to assist in generating RESTful services with OpenAPI documentation as well as gRPC interfaces.
 * The `namespace` identifies the scope of the components in the specification. In this case, it also includes several annotations required for the generated OpenAPI specification.
-* `Shortener` with the `@service` is a components which will expose its operations for REST and gRPC.
+* `Shortener` with the `@service` annotation is a components which will expose its operations for REST and gRPC.
+* `Repository` with the `@dependency` annotation is a dependency of `Shortener` and is not included in any external API specification.
 * `URL` is the data structure returned by the operations in `Shortener`. The `@n` annotations on fields and parameters specify the field number and required for serialization formats like Protobuf. The `@rename` annotation is used to override the field name to fit the naming standards of a language.
 * Every role, operation, type, and field has a description (enclosed in "") which passes through to generated files. For generated code, these descriptions are available inside your IDE.
 

@@ -6,7 +6,7 @@ sidebar_position: 6
 
 ### Namespace
 
-Declared at the top of the Apex document, the `namespace` is used to identify and refer to elements contained in the Apex document. It maybe used by the code generator to target filesystem locations of where to write generated files.
+Declared at the top of the Apex document, the `namespace` is used to identify and refer to elements contained in the Apex document. It may be used by the code generator to target filesystem locations of where to write generated files.
 
 ```apexlang
 namespace "customers"

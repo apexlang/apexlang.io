@@ -2,9 +2,21 @@
 sidebar_position: 2
 ---
 
-# Create a Configuration
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-An Apex configuration is YAML that defines which files are generated and by which module. The structure of configuration file is conveyed in Apex below.
+# Configure Code Generation
+
+## Understanding Apex configuration
+
+An Apex configuration is YAML that defines which files are generated and by which module. The structure of configuration file is conveyed in Apex and JSON schema below.
+
+<Tabs
+  values={[
+    {label: 'Apex', value: 'apex'},
+    {label: 'JSON schema', value: 'jsonschema'},
+  ]}>
+  <TabItem value="apex">
 
 ```apexlang
 "The top level elements of the configuration."
@@ -40,9 +52,21 @@ type Command {
 }
 ```
 
+  </TabItem>
+  <TabItem value="jsonschema">
+
+```json
+{
+  schema: "Coming soon"
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ## Create your first Apex configuration
 
-A common task with regard to API and microservice development is sharing OpenAPI specifications with other teams. In this net step, we will generate the specification for our **URL Shortener** service. In the root of your `urlshortener` directory, create a file named `apex.yaml`:
+A common task with regard to API and microservice development is sharing [OpenAPI](https://swagger.io/specification/) and [gRPC](https://grpc.io/docs/what-is-grpc/core-concepts/#service-definition) specifications with other teams. In this next step, we will generate the specifications for our **URL Shortener** service. In the root of your `urlshortener` directory, create a file named `apex.yaml`:
 
 ```yaml title="apex.yaml"
 spec: spec.apexlang
@@ -50,6 +74,16 @@ generates:
   openapi.yaml:
     module: '@apexlang/codegen/openapiv3'
     visitorClass: OpenAPIV3Visitor
+  proto/service.proto:
+    module: '@apexlang/codegen/grpc'
+    visitorClass: GRPCVisitor
+    config:
+      options:
+        go_package: "github.com/myorg/myapps/pkg/urlshortener"
 ```
 
+:::note
+
 Using `config`, `ifNotExists`, and `runAfter` will be demonstrated later in this tutorial.
+
+:::

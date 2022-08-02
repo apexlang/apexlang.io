@@ -1,8 +1,9 @@
 ---
 sidebar_position: 3
+title: Generate API Specs
 ---
 
-# Generate Assets
+# Generate API Specifications
 
 We have configured Apex to generate an OpenAPI specification for our **URL Shortener** service. Now its time to perform the generation using the `apex` CLI.
 
@@ -104,36 +105,20 @@ servers:
   - url: https://api.goodcorp.com
 ```
 
+:::info
+
 Approximately 40 lines of Apex generates around 80 lines of OpenAPI YAML.
 
-In addition to OpenAPI, lets add a `.proto` file for gRPC. Add `GRPCVisitor` to generate `service.proto`.
+:::
 
-```yaml title="apex.yaml" showLineNumbers
-spec: spec.apexlang
-generates:
-  openapi.yaml:
-    module: '@apexlang/codegen/openapiv3'
-    visitorClass: OpenAPIV3Visitor
-  // highlight-start
-  service.proto:
-    module: '@apexlang/codegen/grpc'
-    visitorClass: GRPCVisitor
-    config:
-      options:
-        go_package: "github.com/myorg/myapps/pkg/urlshortener"
-  // highlight-end
-```
+In addition to OpenAPI, Apex also generated the gRPC service defintion in `proto/service.proto`.
 
-This produces the proto file below.
-
-```protobuf title="service.proto" showLineNumbers
+```protobuf title="proto/service.proto" showLineNumbers
 syntax = "proto3";
 
 package urlshortener.v1;
 
 option go_package = "github.com/myorg/myapps/pkg/urlshortener";
-
-import "google/protobuf/empty.proto";
 
 // The URL shortening service.
 service Shortener {
@@ -141,10 +126,6 @@ service Shortener {
   rpc Shorten(ShortenArgs) returns (URL) {};
   // Return the URL using the generated identifier.
   rpc Lookup(LookupArgs) returns (URL) {};
-  // My empty test operation.
-  rpc Test(google.protobuf.Empty) returns (google.protobuf.Empty) {};
-  // Unary operation
-  rpc Url(URL) returns (google.protobuf.Empty) {};
 }
 
 // URL encapsulates the dynamic identifier and the URL it points to.
@@ -163,7 +144,3 @@ message LookupArgs {
   string id = 1;
 }
 ```
-
-Apex is not just a single purpose generator. You can make it generate pretty much anything.
-
-If you are curious about other things that can be generated, view the [built-in generators](/docs/category/generators).

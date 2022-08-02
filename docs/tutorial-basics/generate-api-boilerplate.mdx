@@ -1,0 +1,261 @@
+---
+sidebar_position: 5
+title: Generate API Boilerplate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Generate API Boilerplate (for Go)
+
+Wouldn't it be cool if you could also generate all the boilerplate code for your API? You are about to do just that using Go. Of course, you will need to have [Go installed](https://go.dev/dl/).
+
+## Adding Go API code generators
+
+Update `apex.yaml` with the contents below.
+
+```yaml title="apex.yaml"
+spec: spec.apexlang
+config:
+  package: urlshortener
+  module: github.com/apexlang/getting-started
+generates:
+  openapi.yaml:
+    module: '@apexlang/codegen/openapiv3'
+    visitorClass: OpenAPIV3Visitor
+  proto/service.proto:
+    module: '@apexlang/codegen/grpc'
+    visitorClass: GRPCVisitor
+    config:
+      options:
+        go_package: github.com/apexlang/getting-started/proto
+    runAfter:
+      - command: |
+          protoc
+          --go_out=.
+          --go_opt=paths=source_relative
+          --go-grpc_out=.
+          --go-grpc_opt=paths=source_relative
+          proto/service.proto
+  pkg/urlshortener/interfaces.go:
+    module: '@apexlang/codegen/go'
+    visitorClass: InterfacesVisitor
+  pkg/urlshortener/fiber.go:
+    module: '@apexlang/codegen/go'
+    visitorClass: FiberVisitor
+  pkg/urlshortener/grpc.go:
+    module: '@apexlang/codegen/go'
+    visitorClass: GRPCVisitor
+    config:
+      protoPackage: github.com/apexlang/getting-started/proto
+  pkg/urlshortener/services.go:
+    ifNotExists: true
+    module: '@apexlang/codegen/go'
+    visitorClass: ScaffoldVisitor
+    config:
+      types:
+        - service
+  pkg/urlshortener/repositories.go:
+    ifNotExists: true
+    module: '@apexlang/codegen/go'
+    visitorClass: ScaffoldVisitor
+    config:
+      names:
+        - Repository
+  cmd/main.go:
+    ifNotExists: false  # Change to true to control dependency injection
+    module: '@apexlang/codegen/go'
+    visitorClass: MainVisitor
+```
+
+:::note
+
+Now we are using some more options:
+
+* `config` - Configuration object that is available to code generation classes. Can be set globally and overridden for each file.
+* `ifNotExists` - When true, only generates this file if it does not exist.
+* `runAfter` - Runs commands after code generation. Can be used to call other tools such as `protoc`.
+
+:::
+
+Run these commands to regenerate the code, initialize the go module, and download the necessary Go dependencies.
+
+```cli
+apex generate apex.yaml
+go mod init github.com/apexlang/getting-started
+go mod tidy
+```
+
+## Implement the Service Logic
+
+At this point, you have a fully stubbed out **URL Shortener** service with all the boilerplate code generated. You only need to implement the core logic. To complete the project, update `services.go` and `repositories.go` under `pkg/urlshortener` with the contents below.
+
+<Tabs
+  values={[
+    {label: 'pkg/urlshortener/services.go', value: 'services'},
+    {label: 'pkg/urlshortener/repositories.go', value: 'repositories'},
+  ]}>
+  <TabItem value="services">
+
+```go
+package urlshortener
+
+import (
+	"context"
+	"errors"
+	"math/rand"
+	"time"
+
+	"github.com/apexlang/api-go/errorz"
+	"github.com/apexlang/api-go/transport/httpresponse"
+	"github.com/go-logr/logr"
+)
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+type ShortenerImpl struct {
+	log        logr.Logger
+	repository Repository
+}
+
+func NewShortenerImpl(log logr.Logger, repository Repository) *ShortenerImpl {
+	return &ShortenerImpl{
+		log:        log,
+		repository: repository,
+	}
+}
+
+func (s *ShortenerImpl) Shorten(ctx context.Context, url string) (*URL, error) {
+	urlResp, err := s.repository.LoadByURL(ctx, url)
+	if err != nil {
+		var e *errorz.Error
+		if !(errors.As(err, &e) && e.Code == errorz.NotFound) {
+			return nil, err
+		}
+	} else if urlResp != nil {
+		// Return already stored URL
+		return urlResp, nil
+	}
+
+	newURL := URL{
+		ID:  generateID(8),
+		URL: url,
+	}
+
+	if err = s.repository.StoreURL(ctx, &newURL); err != nil {
+		return nil, err
+	}
+
+	return &newURL, nil
+}
+
+func (s *ShortenerImpl) Lookup(ctx context.Context, id string) (*URL, error) {
+	url, err := s.repository.LoadByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := httpresponse.FromContext(ctx)
+	if resp != nil {
+		// HTTP specific logic to perform browser redirect.
+		resp.Header.Add("Location", url.URL)
+		resp.Status = 302 // StatusFound
+	}
+
+	return url, nil
+}
+
+func generateID(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
+}
+```
+
+  </TabItem>
+  <TabItem value="repositories">
+
+```go
+package urlshortener
+
+import (
+	"context"
+	"sync"
+
+	"github.com/apexlang/api-go/errorz"
+	"github.com/go-logr/logr"
+)
+
+type RepositoryImpl struct {
+	log logr.Logger
+
+	mu    sync.RWMutex
+	byID  map[string]string
+	byURL map[string]string
+}
+
+func NewRepositoryImpl(log logr.Logger) *RepositoryImpl {
+	return &RepositoryImpl{
+		log:   log,
+		byID:  make(map[string]string),
+		byURL: make(map[string]string),
+	}
+}
+
+func (s *RepositoryImpl) LoadByID(ctx context.Context, id string) (*URL, error) {
+	s.mu.RLock()
+	url, ok := s.byID[id]
+	s.mu.RUnlock()
+
+	if !ok {
+		return nil, errorz.Newf(errorz.NotFound, "URL for ID %s not found", id)
+	}
+
+	return &URL{
+		ID:  id,
+		URL: url,
+	}, nil
+}
+
+func (s *RepositoryImpl) LoadByURL(ctx context.Context, url string) (*URL, error) {
+	s.mu.RLock()
+	id, ok := s.byURL[url]
+	s.mu.RUnlock()
+
+	if !ok {
+		return nil, errorz.Newf(errorz.NotFound, "URL %s not found", url)
+	}
+
+	return &URL{
+		ID:  id,
+		URL: url,
+	}, nil
+}
+
+func (s *RepositoryImpl) StoreURL(ctx context.Context, url *URL) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.byID[url.ID] = url.URL
+	s.byURL[url.URL] = url.ID
+
+	return nil
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## Run and Test the Service
+
+Finally, run the service and test with your favorite API testing tool, like [Postman](https://www.postman.com/downloads/) or [Rest Client for VS Code](https://marketplace.visualstudio.com/items?itemName=humao.rest-client).
+
+```cli
+go run cmd/main.go
+```
