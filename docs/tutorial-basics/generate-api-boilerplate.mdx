@@ -8,7 +8,14 @@ import TabItem from '@theme/TabItem';
 
 # Generate API Boilerplate (for Go)
 
-Wouldn't it be cool if you could also generate all the boilerplate code for your API? You are about to do just that using Go. Of course, you will need to have [Go installed](https://go.dev/dl/).
+Wouldn't it be cool if you could also generate all the boilerplate code for your API? You are about to do just that using Go.
+
+Of course, you will need to have [Go installed](https://go.dev/dl/) and in your PATH. Additionally, you need [`protoc-gen-go` installed](https://grpc.io/docs/languages/go/quickstart/).
+
+```cli title="Install protoc-gen-go"
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
 
 ## Adding Go API code generators
 

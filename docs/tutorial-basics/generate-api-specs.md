@@ -7,6 +7,12 @@ title: Generate API Specs
 
 We have configured Apex to generate an OpenAPI specification for our **URL Shortener** service. Now its time to perform the generation using the `apex` CLI.
 
+:::info
+
+Make sure you have `protoc` installed. The instructions are [here](https://grpc.io/docs/protoc-installation/).
+
+:::
+
 ## Running the code generator
 
 Now we will be using the `apex generate` command to generate our desired assets.
