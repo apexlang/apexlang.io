@@ -19,6 +19,8 @@ An Apex configuration is YAML that defines which files are generated and by whic
   <TabItem value="apex">
 
 ```apexlang
+namespace "apexlang.config.v1"
+
 "The top level elements of the configuration."
 type Configuration {
   "The path to the apex specification file."
@@ -36,7 +38,7 @@ type Target {
   "The name of the exported visitor class that generates the file contents."
   visitorClass: string,
   "When true, the file is only generated if it does not exist. This is useful for scafolded files."
-  ifNotExists: boolean = false,
+  ifNotExists: bool = false,
   "Target-level configuration (optional)."
   config: {string: any}?
   "Commands to execute that relate to this target (e.g., other code generation tools)."
