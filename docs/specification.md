@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# Language specification
+# Language Specification
 
 ### Namespace
 
@@ -43,8 +43,8 @@ Apex also includes the following special types that are decoded into language-sp
 | `string`   | a UTF-8 encoded string.                                                  |
 | `datetime` | a RFC 3339 formatted date / time / timezone.                             |
 | `bytes`    | an array of bytes of arbitrary length.                                   |
-| `raw`      | a raw encoded value that can be decoded at a later point in the program. |
-| `value`    | a free form encoded value that encapsulates any of the above types.      |
+| `any`      | a raw encoded value that can be decoded at a later point in the program. |
+| `value`    | a free form encoded value that encapsulates any of the above types and includes a type discriminator. |
 
 ### Collections
 
