@@ -5,6 +5,9 @@
  */
 
 /* You can override the default Infima variables here. */
+
+@import './variables/colors.modules.css';
+
 :root {
   --ifm-color-primary: #093E6D;
   --ifm-color-primary-dark: #29784c;
@@ -27,4 +30,64 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Information badges below */
+
+.badgeRed {
+  background: var(--ifm-color-primary);
+  color: white;
+  padding: 0.2rem;
+  font-weight: 750;
+  border-radius: 4px;
+  margin-right: 1rem;
+}
+
+.badgeDarkBlue {
+  background: var(--ds-blue-900);
+  color: var(--ds-gray-100);
+  font-weight: 750;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  margin-right: 1rem;
+}
+
+.badgeMint {
+  background: #01c3a5;
+  color: var(--ds-gray-900);
+  padding: 0.2rem;
+  font-weight: 750;
+  margin-right: 1rem;
+}
+
+.badgeGold {
+  background: #fbd741;
+  color: var(--ds-gray-900);
+  padding: 0.2rem;
+  font-weight: 750;
+  margin-right: 1rem;
+}
+
+.badgeOrange {
+  background: #ec5c26;
+  color: var(--ds-white);
+  padding: 0.2rem;
+  font-weight: 750;
+  margin-right: 1rem;
+}
+
+.badgeLime {
+  background: #98cb3c;
+  color: var(--ds-gray-900);
+  padding: 0.2rem;
+  font-weight: 750;
+  margin-right: 1rem;
+}
+
+.badgeYellow {
+  background: #fddf7f;
+  color: var(--ds-gray-600);
+  padding: 0.2rem;
+  font-weight: 750;
+  margin-right: 1rem;
 }
