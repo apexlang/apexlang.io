@@ -59,7 +59,90 @@ type Command {
 
 ```json
 {
-  schema: "Coming soon"
+  "$id": "https://apexlang.io/schemas/configuration.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Apex Configuration File Schema",
+  "$ref": "#/$defs/Configuration",
+  "$defs": {
+    "Configuration": {
+      "properties": {
+        "schema": {
+          "description": "The path to the apex specification file.",
+          "type": "string"
+        },
+        "config": {
+          "description": "Global configuration settings available to all targets (optional).",
+          "type": "object",
+          "patternProperties": {
+            ".*": {}
+          }
+        },
+        "generates": {
+          "description": "The map of target files to generate and their settings.",
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "$ref": "#/$defs/Target"
+            }
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "generates"
+      ]
+    },
+    "Target": {
+      "properties": {
+        "module": {
+          "description": "The TypeScript module containing the visitor class.",
+          "type": "string"
+        },
+        "visitorClass": {
+          "description": "The name of the exported visitor class that generates the file contents.",
+          "type": "string"
+        },
+        "ifNotExists": {
+          "description": "When true, the file is only generated if it does not exist. This is useful for scafolded files.",
+          "type": "boolean",
+          "default": false
+        },
+        "config": {
+          "description": "Target-level configuration (optional).",
+          "type": "object",
+          "patternProperties": {
+            ".*": {}
+          }
+        },
+        "runAfter": {
+          "description": "Commands to execute that relate to this target (e.g., other code generation tools).",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Command"
+          }
+        }
+      },
+      "required": [
+        "module",
+        "visitorClass"
+      ]
+    },
+    "Command": {
+      "properties": {
+        "command": {
+          "description": "The command to execute.",
+          "type": "string"
+        },
+        "dir": {
+          "description": "The working directory (optional - default is the current directory).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command"
+      ]
+    }
+  }
 }
 ```
 
