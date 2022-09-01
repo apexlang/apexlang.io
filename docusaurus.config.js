@@ -1,45 +1,46 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/vsDark');
-const darkCodeTheme = require('prism-react-renderer/themes/vsLight');
+const lightCodeTheme = require("prism-react-renderer/themes/vsDark");
+const darkCodeTheme = require("prism-react-renderer/themes/vsLight");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Apex',
-  tagline: 'A top-down / API-first description language for modeling and generating cloud-native applications',
-  url: 'https://apexlang.io',
-  baseUrl: '/',
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  title: "Apex",
+  tagline:
+    "A top-down / API-first description language for modeling and generating cloud-native applications",
+  url: "https://apexlang.io",
+  baseUrl: "/",
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
+  favicon: "img/favicon.ico",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'apexlang', // Usually your GitHub org/user name.
-  projectName: 'apexlang.io', // Usually your repo name.
+  organizationName: "apexlang", // Usually your GitHub org/user name.
+  projectName: "apexlang.io", // Usually your repo name.
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: "en",
+    locales: ["en"],
   },
 
   presets: [
     [
-      'classic',
+      "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          sidebarPath: require.resolve('./sidebars.js')
+          sidebarPath: require.resolve("./sidebars.js"),
         },
         blog: {
           showReadingTime: true,
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve("./src/css/custom.css"),
         },
       }),
     ],
@@ -50,64 +51,64 @@ const config = {
     ({
       navbar: {
         logo: {
-          alt: 'Apex',
-          src: 'img/logo-horizontal-light.svg',
-          srcDark: 'img/logo-horizontal-dark.svg',
+          alt: "Apex",
+          src: "img/logo-horizontal-light.svg",
+          srcDark: "img/logo-horizontal-dark.svg",
         },
         items: [
           {
-            type: 'doc',
-            docId: 'introduction',
-            position: 'left',
-            label: 'Docs',
+            type: "doc",
+            docId: "introduction",
+            position: "left",
+            label: "Docs",
           },
           /*{to: '/blog', label: 'Blog', position: 'left'},*/
           {
-            href: 'https://github.com/apexlang',
-            label: 'GitHub',
-            position: 'right',
+            href: "https://github.com/apexlang",
+            label: "GitHub",
+            position: "right",
           },
         ],
       },
       footer: {
-        style: 'dark',
+        style: "dark",
         links: [
           {
-            title: 'Docs',
+            title: "Docs",
             items: [
               {
-                label: 'Introduction',
-                to: '/docs/introduction',
+                label: "Introduction",
+                to: "/docs/introduction",
               },
             ],
           },
           {
-            title: 'Community',
+            title: "Community",
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/apexlang',
+                label: "Stack Overflow",
+                href: "https://stackoverflow.com/questions/tagged/apexlang",
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/apexlang',
+                label: "Discord",
+                href: "https://discordapp.com/invite/apexlang",
               },
               {
-                label: 'Twitter',
-                href: 'https://twitter.com/apexlang',
+                label: "Twitter",
+                href: "https://twitter.com/apexlang",
               },
             ],
           },
           {
-            title: 'More',
+            title: "More",
             items: [
               /*{
                 label: 'Blog',
                 to: '/blog',
               },*/
               {
-                label: 'GitHub',
-                href: 'https://github.com/apexlang',
+                label: "GitHub",
+                href: "https://github.com/apexlang",
               },
             ],
           },
@@ -117,7 +118,18 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ["protobuf"],
+        additionalLanguages: ["protobuf", "bash", "shell-session"],
+        magicComments: [
+          {
+            className: "code-block-highlighted-line",
+            line: "highlight-next-line",
+            block: { start: "highlight-start", end: "highlight-end" },
+          },
+          {
+            className: "code-block-error-line",
+            line: "This will error",
+          },
+        ],
       },
     }),
 };
