@@ -38,17 +38,17 @@ Prism.languages.apexlang = {
 		pattern: /\b[A-Z]\w*Input\b/,
 		alias: 'class-name'
 	},
-	'scalar': /\b(?:Boolean|Float|ID|Int|String)\b/,
+	'scalar': /\b(?:bool|f32|f64|ID|i8|i16|i32|i64|u8|u16|u32|u64|bytes|string|datetime|any|raw)\b/,
 	'constant': /\b[A-Z][A-Z_\d]*\b/,
 	'class-name': {
-		pattern: /(\b(?:enum|implements|interface|on|role|scalar|type|union)\s+|&\s*|:\s*|\[)[A-Z_]\w*/,
+		pattern: /(\b(?:enum|implements|interface|on|scalar|type|union)\s+|&\s*|:\s*|\[)[A-Z_]\w*/,
 		lookbehind: true
 	},
-	'keyword': /\b(?:import|namespace|directive|enum|implements|interface|on|role|type|union)\b/,
+	'keyword': /\b(?:import|namespace|directive|enum|implements|func|interface|on|as|require|type|union)\b/,
 	'operator': /[!=|&]|\.{3}/,
 	'property-query': /\w+(?=\s*\()/,
 	'object': /\w+(?=\s*\{)/,
-	'punctuation': /[!(){}\[\]:=,]/,
+	'punctuation': /[!(){}<>\[\]:=,]/,
 	'property': /\w+/
 };
 

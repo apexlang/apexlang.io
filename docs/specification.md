@@ -43,8 +43,8 @@ Apex also includes the following special types that are decoded into language-sp
 | `string`   | a UTF-8 encoded string.                                                  |
 | `datetime` | a RFC 3339 formatted date / time / timezone.                             |
 | `bytes`    | an array of bytes of arbitrary length.                                   |
-| `any`      | a raw encoded value that can be decoded at a later point in the program. |
-| `value`    | a free form encoded value that encapsulates any of the above types and includes a type discriminator. |
+| `any`      | a language specific type, list, or map value that is determined at runtime. |
+| `raw`      | a raw encoded value that can be decoded at a later point in the program. |
 
 ### Collections
 
@@ -61,63 +61,49 @@ Types can be encapsulated in arrays and maps with enclosing syntax:
 
 By default, a declared type is required and if unset, contains a zero value (`0`, `""`, empty array or map). To make any type optional (nullable), follow it with a `?`. For example,  `string?` represents an optional string value.
 
-### Interfaces and Roles
+### Functions
 
-Interfaces define the operations available in your application. They are useful for simple scenarios where the application is made of a few operations in a single component. The syntax resembles interfaces in familiar programming languages.
+Functions are independent operations and allow two patterns for parameter input.
+
+Common functions accept zero-to-many parameters and are generated with the same signature defined in Apex. Functions are recommended when passing in a small number of fields and follow a simple, familiar, and easy to read format. All parameters are named. In this example, we pass in first and last names to create a customer and return its new identifier as a `u64`.
 
 ```apexlang
-interface {
-  add(addend1: i64, addend2: i64): i64
-}
+func createCustomer(firstName: string, lastName: string): u64
 ```
 
-Roles are conceptual groups of operations that allow the developer divide communication up into any number of components. You name the roles according to their purpose. For example, a distributed calculator could split each mathematical operation up into different roles implemented by different modules.
+Now, let's say you want to model a request/reply style operation or you want to accept a large number of fields inside a wrapper object. This is where [unary operations](https://en.wikipedia.org/wiki/Unary_operation) are preferred. In contrast to functions, unary operations accept exactly one input.
+
+Instead of using parenthesis `(...)` to enclose parameters, unary operations use brackets `[...]` to enclose a single parameter. This is what `createCustomer` would look like accepting a Customer data type. We'll look at how `Customer` is defined shortly.
 
 ```apexlang
-role Adder {
+func createCustomer[customer: Customer]: u64
+```
+
+Why the different syntax? In the case of common functions, multiple parameters are possible so the arguments are likely encapsulated in a wrapper object for serialization. For unary operations, since there is a single parameter no wrapper object is required and the input object can be serialized directly. This syntax is necessary for the the code generation tools to generate the appropriate client and server code.
+
+### Interfaces
+
+Interfaces are conceptual groups of operations that allow the developer divide communication up into any number of components. Typically, interfaces are named according to their purpose. For example, a distributed calculator could split each mathematical operation up into different roles implemented by different modules.
+
+```apexlang
+interface Adder {
   add(addend1: i64, addend2: i64): i64
 }
 
-role Subtractor {
+interface Subtractor {
   subtract(minuend: i64, subtrahend: i64): i64
 }
 
-role Multiplier {
+interface Multiplier {
   multiply(factor1: i64, factor2: i64): i64
 }
 
-role Divider {
+interface Divider {
   divide(dividend: i64, divisor: i64): i64
 }
 ```
 
-Roles can be either internal or external to your application. Apex code generation modules can be instructed per role to generate either invokers (caller side) or handlers (callee side). Using Annotations and Directives (described below), is the recommended way to 
-
-#### Function and unary operations
-
-Operations can follow two possible structures, functions and unary procedures. The operations shown in the examples above are functions. Functions are applicable when passing in a small number of fields and follow a simple, familiar, and easily read format.
-
-All parameters are named. In this example, we passing in first and last names to create a customer and return a `u64` that represents the customer identifier.
-
-```apexlang
-role CustomerStore {
-  createCustomer(firstName: string, lastName: string): u64
-}
-```
-
-Let's say the number of fields required to create a customer warrants a wrapper object. This is where [unary operations](https://en.wikipedia.org/wiki/Unary_operation) are preferred. In contrast to functions, unary operations accept a single input.
-
-Instead of using parenthesis `(...)` to enclose zero or many parameters, Unaries use curly brackets `{...}` to enclose a single parameter.
-
-```apexlang
-role CustomerStore {
-  createCustomer{customer: Customer}: u64
-}
-```
-
-Why the different syntax? In the case of functions, multiple parameters are possible so the arguments must be encapsulated in a wrapper object to serialize over waPC. For unary operations, since there is a single parameter no wrapper object is required and the input object can be serialized directly. This syntax is signaling an optimization for the code generation tool.
-
-Now let's look at how `Customer` can be defined using an object type.
+Interfaces can be either internal or external to your application. Apex code generation modules can make use of Annotations and Directives (described below) to generate either invokers (caller side) or handlers (callee side).
 
 ### Object types
 
@@ -127,15 +113,15 @@ In Apex, we might declare `Customer` like this:
 
 ```apexlang
 type Customer {
-  firstName: string
+  firstName:  string
   middleName: string?
-  lastName: string
-  address1: string
-  address2: string?
-  city: string
-  zipcode: string
-  email: string
-  phones: [PhoneNumber]
+  lastName:   string
+  address1:   string
+  address2:   string?
+  city:       string
+  zipcode:    string
+  email:      string
+  phones:     [PhoneNumber]
 }
 ```
 
@@ -148,13 +134,13 @@ In `Customer`, we are allowing multiple mobile, home, or work phone numbers. Her
 ```apexlang
 type PhoneNumber {
   number: string
-  type: PhoneType
+  type:   PhoneType
 }
 
 enum PhoneType {
   mobile = 0 as "Mobile"
-  home = 1 as "Home"
-  work = 2 as "Work"
+  home   = 1 as "Home"
+  work   = 2 as "Work"
 }
 ```
 
@@ -162,11 +148,13 @@ Each enum value denotes its programatic / variable name, the integer value that 
 
 ### Union types
 
-TODO: What are union types?
+Unions types denote that a type can have one of several representations.
 
 ```apexlang
 union Animal = Cat | Dog
 ```
+
+The code generator must provide a way to determine the actual type at runtime and handle serialization if necessary.
 
 ### Descriptions
 
@@ -202,6 +190,17 @@ type PhoneNumber {
 }
 ```
 
+### Default values
+
+Fields can also specify default values when a type is initialized. This needs to be carefully considered in the code generation. Languages vary of how this would be implemented.
+
+```apexlang
+type PhoneNumber {
+  number: string
+  type:   PhoneType = mobile
+}
+```
+
 ### Annotations and Directives
 
 Annotations attach additional metadata to elements. These can be used in the code generation tool to implement custom functionality for your use case. Annotations have a name and zero or many arguments.
@@ -210,15 +209,15 @@ Here is what `Customer` might look like with annotations.
 
 ```apexlang
 type Customer {
-  firstName: string @notEmpty
-  middleName: string? @notEmpty
-  lastName: string @notEmpty
-  address1: string @notEmpty
-  address2: string? @notEmpty
-  city: string @length(2)
-  zipcode: string @length(5)
-  email: string @email @range(min: 5, max: 80)
-  phones: [PhoneNumber]
+  firstName:  string        @notEmpty
+  middleName: string?       @notEmpty
+  lastName:   string        @notEmpty
+  address1:   string        @notEmpty
+  address2:   string?       @notEmpty
+  city:       string        @length(2)
+  zipcode:    string        @length(5)
+  email:      string        @email @range(min: 5, max: 80)
+  phones:     [PhoneNumber]
 }
 ```
 
@@ -231,15 +230,32 @@ Multiple annotations can be attached to an element. All annotations have named a
 
 The annotation examples above shows a validation scenario but annotations are not limited to this purpose. The developer has the freedom to extend the code generation tool to leverage annotations for their application's needs. In the `Customer` example, the developer could use these annotations to generate `validate` methods on each of the generated object types.
 
-TODO: Directives
-
-### Default values
-
-Fields can also specify default values when a type is initialized. This needs to be carefully considered in the code generation. Languages vary of how this would be implemented.
+Directives are used to ensure that an annotation's arguments match and an expected format. For constraining a numeric or length range, the directive for `@range` might look like this:
 
 ```apexlang
-type PhoneNumber {
-  number: string
-  type: PhoneType = mobile
-}
+directive @range(min: u32, max: u32)
+  on FIELD
+  require @valid on TYPE
+```
+
+This directive specifies parameters but also where it can be applied. The syntax `on FIELD require @valid on TYPE` says "only allow this on fields where there is also an @valid annotation on its type". Multiple locations are supported and delimited with `|`:
+
+```apexlang
+NAMESPACE | INTERFACE | OPERATION | PARAMETER | TYPE | FIELD | ENUM | ENUM_VALUE | UNION | ALIAS
+```
+
+Directive improve the user experience of annotations by giving the developer useful error information when thier annotations are invalid. These directives might be something made available through imports.
+
+### Imports
+
+Apex makes use of installable modules that can contain useful definitions to import. For example, OpenAPI annotations are imported with the following statement:
+
+```apexlang
+import * from "@apexlang/openapi"
+```
+
+You are also able to import specific definitions:
+
+```apexlang
+import { @info } from "@apexlang/openapi"
 ```
