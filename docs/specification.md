@@ -257,5 +257,22 @@ import * from "@apexlang/openapi"
 Is is also possible to import specific definitions:
 
 ```apexlang
-import { @info } from "@apexlang/openapi"
+import { info, Contact, License } from "@apexlang/openapi"
+
+namespace "urlshortener.v1"
+  @info(
+    title: "Simple URL shortener API"
+    description: "Simple API for shortening URLs created using Apex."
+    version: "1.0.0"
+    termsOfService: "https://api.goodcorp.com/terms/"
+    contact: {
+      name: "API Support"
+      url: "https://api.goodcorp.com/support"
+      email: "api@goodcorp.com"
+    },
+    license: {
+      name: "Apache 2.0"
+      url: "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  )
 ```
