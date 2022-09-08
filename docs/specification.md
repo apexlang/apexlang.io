@@ -65,7 +65,7 @@ By default, a declared type is required and if unset, contains a zero value (`0`
 
 Functions are independent operations and allow two patterns for parameter input.
 
-Common functions accept zero-to-many parameters and are generated with the same signature defined in Apex. Functions are recommended when passing in a small number of fields and follow a simple, familiar, and easy to read format. All parameters are named. In this example, we pass in first and last names to create a customer and return its new identifier as a `u64`.
+Common functions accept zero or more parameters and are generated with the same signature defined in Apex. Functions are recommended when passing in a small number of fields and follow a simple, familiar, and easy to read format. All parameters must be named. In this example, we pass in first and last names to create a customer and return its new identifier as a `u64`.
 
 ```apexlang
 func createCustomer(firstName: string, lastName: string): u64
@@ -83,7 +83,7 @@ Why the different syntax? In the case of common functions, multiple parameters a
 
 ### Interfaces
 
-Interfaces are conceptual groups of operations that allow the developer divide communication up into any number of components. Typically, interfaces are named according to their purpose. For example, a distributed calculator could split each mathematical operation up into different roles implemented by different modules.
+Interfaces are conceptual groups of operations that allow the developer to divide communication into multiple components. Typically, interfaces are named according to their purpose. For example, a distributed calculator could split each mathematical operation into different roles implemented by different modules.
 
 ```apexlang
 interface Adder {
@@ -192,7 +192,7 @@ type PhoneNumber {
 
 ### Default values
 
-Fields can also specify default values when a type is initialized. This needs to be carefully considered in the code generation. Languages vary of how this would be implemented.
+Default values for Fields can specified when a type is initialized.  Codegen implementation for default values may vary based on limitations of the target language.
 
 ```apexlang
 type PhoneNumber {
@@ -230,7 +230,7 @@ Multiple annotations can be attached to an element. All annotations have named a
 
 The annotation examples above shows a validation scenario but annotations are not limited to this purpose. The developer has the freedom to extend the code generation tool to leverage annotations for their application's needs. In the `Customer` example, the developer could use these annotations to generate `validate` methods on each of the generated object types.
 
-Directives are used to ensure that an annotation's arguments match and an expected format. For constraining a numeric or length range, the directive for `@range` might look like this:
+Directives are used to ensure that an annotation's arguments match an expected format. For constraining a numeric or length range, the directive for `@range` might look like this:
 
 ```apexlang
 directive @range(min: u32, max: u32)
@@ -238,23 +238,23 @@ directive @range(min: u32, max: u32)
   require @valid on TYPE
 ```
 
-This directive specifies parameters but also where it can be applied. The syntax `on FIELD require @valid on TYPE` says "only allow this on fields where there is also an @valid annotation on its type". Multiple locations are supported and delimited with `|`:
+This directive specifies parameters but also where it can be applied. The syntax `on FIELD require @valid on TYPE` means "only allow this on fields where there is also an @valid annotation on its type". Multiple locations are supported and delimited with `|`:
 
 ```apexlang
 NAMESPACE | INTERFACE | OPERATION | PARAMETER | TYPE | FIELD | ENUM | ENUM_VALUE | UNION | ALIAS
 ```
 
-Directive improve the user experience of annotations by giving the developer useful error information when thier annotations are invalid. These directives might be something made available through imports.
+Directives improve the user experience of annotations by giving the developer useful error details when the annotations are invalid.  Directives can be in the main file or be made available through imports.
 
 ### Imports
 
-Apex makes use of installable modules that can contain useful definitions to import. For example, OpenAPI annotations are imported with the following statement:
+Apex can integrate external modules using the `import` command. For example, OpenAPI annotations can be imported with the following statement:
 
 ```apexlang
 import * from "@apexlang/openapi"
 ```
 
-You are also able to import specific definitions:
+Is is also possible to import specific definitions:
 
 ```apexlang
 import { @info } from "@apexlang/openapi"
