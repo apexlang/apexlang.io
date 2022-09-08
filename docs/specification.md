@@ -63,13 +63,17 @@ By default, a declared type is required and if unset, contains a zero value (`0`
 
 ### Functions
 
-Functions are independent operations and allow two patterns for parameter input.
+Functions are independent operations and allow two styles for accepting input: **parameterized** and **unary**.
 
-Common functions accept zero or more parameters and are generated with the same signature defined in Apex. Functions are recommended when passing in a small number of fields and follow a simple, familiar, and easy to read format. All parameters must be named. In this example, we pass in first and last names to create a customer and return its new identifier as a `u64`.
+#### Parameterized operations
+
+Parameterized operations are familiar function signatures. They accept zero or more parameters and are generated with the same signature defined in Apex. This style is recommended when passing in a small number of fields and follow a simple, familiar, and easy to read format. All parameters must be named. In this example, we pass in first and last names to create a customer and return its new identifier as a `u64`.
 
 ```apexlang
 func createCustomer(firstName: string, lastName: string): u64
 ```
+
+#### Unary operations
 
 Now, let's say you want to model a request/reply style operation or you want to accept a large number of fields inside a wrapper object. This is where [unary operations](https://en.wikipedia.org/wiki/Unary_operation) are preferred. In contrast to functions, unary operations accept exactly one input.
 
@@ -79,7 +83,91 @@ Instead of using parenthesis `(...)` to enclose parameters, unary operations use
 func createCustomer[customer: Customer]: u64
 ```
 
-Why the different syntax? In the case of common functions, multiple parameters are possible so the arguments are likely encapsulated in a wrapper object for serialization. For unary operations, since there is a single parameter no wrapper object is required and the input object can be serialized directly. This syntax is necessary for the the code generation tools to generate the appropriate client and server code.
+Why the different syntax? In the case of parameterized operations, multiple parameters are possible so the arguments are likely encapsulated in a wrapper object for serialization. For unary operations, since there is a single parameter no wrapper object is required and the input object can be serialized directly. This syntax is necessary for the the code generation tools to generate the appropriate client and server code.
+
+#### Serialization example
+
+Here is a side-by-side comparison of the serialization differences between parameterized and unary operations.
+
+<div style={{border: "1px #ddd solid", marginBottom: "1em"}}>
+<div style={{width: "50%", padding: "1em", float: "left"}}>
+
+#### Parameterized
+
+```apexlang
+func greeting(name: string): string
+```
+
+When invoking...
+
+```typescript
+greeting("World")
+```
+
+the input would serialize with a wrapper object in JSON.
+
+```json
+{
+  "name": "World"
+}
+```
+
+</div>
+<div style={{width: "50%", padding: "1em", float: "left"}}>
+
+#### Unary
+
+```apexlang
+func greeting[name: string]: string
+```
+
+When invoking...
+
+```typescript
+greeting("World")
+```
+
+the input would serialize as a simple string in JSON.
+
+```json
+"World"
+```
+
+With a unary operation, notice there is no wrapper object or `name` field.
+`name` is used only as the argument name in the generated code.
+
+</div>
+<div style={{clear: "both"}}></div>
+</div>
+
+Here is a request/reply-style operation example using the unary style.
+
+```apexlang
+func greeting[person: Person]: string
+
+type Person {
+  firstName: string
+  lastName:  string
+}
+```
+
+Invoking... 
+
+```typescript
+greeting(new Person {
+  firstName: "Apex",
+  lastName:  "Lang",
+})
+```
+
+would serialize in JSON as:
+
+```json
+{
+  "firstName": "Apex",
+  "lastName": "Lang"
+}
+```
 
 ### Interfaces
 
@@ -155,6 +243,16 @@ union Animal = Cat | Dog
 ```
 
 The code generator must provide a way to determine the actual type at runtime and handle serialization if necessary.
+
+### Alias types
+
+Alias types are used for cases when scalar types (like string) should be parsed our treated like a different data type in the generated code. For example, [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)s are commonly serialized as strings, but parsed into a specific data type.
+
+```apexlang
+alias UUID = string
+```
+
+By default, code generation will treat `UUID` as a string. However, generators should provide configuration options to parse or cast the the string into a desired data type.
 
 ### Descriptions
 
