@@ -53,7 +53,7 @@ interface Repository @dependency {
   "Load the ID by its URL."
   loadByURL(url: string): URL
   "Store a URL and its identifier."
-  storeURL{url: URL}
+  storeURL[url: URL]
 }
 
 "URL encapsulates the dynamic identifier and the URL it points to."

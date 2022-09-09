@@ -32,6 +32,9 @@ spec: spec.apexlang
 config:
   package: urlshortener
   module: github.com/apexlang/getting-started
+  logger:
+    import: github.com/go-logr/logr
+    interface: logr.Logger
 generates:
   openapi.yaml:
     module: '@apexlang/codegen/openapiv3'
