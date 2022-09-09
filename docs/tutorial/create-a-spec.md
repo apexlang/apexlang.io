@@ -36,7 +36,7 @@ namespace "urlshortener.v1"
   @path("/v1")
 
 "The URL shortening service."
-role Shortener @service @uses(["Repository"]) {
+interface Shortener @service @uses(["Repository"]) {
   "Shorten a URL and return a generated identifier."
   shorten(url: string @n(1) @url): URL
     @PUT @path("/shorten")
@@ -47,7 +47,7 @@ role Shortener @service @uses(["Repository"]) {
 }
 
 "Repository handles loading and storing shortened URLs."
-role Repository @dependency {
+interface Repository @dependency {
   "Load the URL by its identifier."
   loadById(id: string): URL
   "Load the ID by its URL."
