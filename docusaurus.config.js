@@ -28,6 +28,8 @@ const config = {
     locales: ["en"],
   },
 
+  themes: ["@docusaurus/theme-live-codeblock"],
+
   presets: [
     [
       "classic",
@@ -118,7 +120,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ["protobuf", "bash", "shell-session"],
+        additionalLanguages: ["protobuf", "bash", "rust", "shell-session"],
         magicComments: [
           {
             className: "code-block-highlighted-line",
