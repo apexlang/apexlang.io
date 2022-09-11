@@ -1,0 +1,30 @@
+.codeblock {
+  font-size: 13px;
+}
+
+.codecontainer {
+  height: "350px";
+  overflow: "auto";
+}
+
+.liveEditor {
+  overflow: "auto";
+  border-radius: "4px";
+}
+
+.error {
+  position: absolute;
+  top: 90px;
+  left: 4%;
+  width: 100%;
+  background: #99000088;
+  height: 80%;
+  width: 90%;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+}

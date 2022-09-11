@@ -20,7 +20,7 @@
   background-size: cover;
 }
 
-[data-theme='dark'] .heroTitle {
+[data-theme="dark"] .heroTitle {
   background-image: url("@site/static/img/logo-vertical-dark.svg");
 }
 
@@ -29,7 +29,7 @@
 }
 
 .separatorText {
-  color: #449496;
+  color: #55b2b4;
 }
 
 .buttons {
@@ -62,5 +62,3 @@
     justify-content: center;
   }
 }
-
-
