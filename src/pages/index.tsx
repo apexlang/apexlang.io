@@ -89,7 +89,7 @@ export default function Home() {
       <HomepageHeader />
       <main>
         <HomepageFeatures />
-        <section className="row">
+        <section className="row" style={{ marginBottom: "2rem" }}>
           <div className="col">
             <ApexEditor
               defaultTitle="See It In Action"
