@@ -98,32 +98,37 @@ const ApexEditor: React.FC<Props> = (props) => {
   const { className } = props;
   const [parseError, updateParseError] = useState("");
 
-  const [state, updateState] = useState({});
+  const [state, updateState] = useState({ code: "", lang: "" });
 
-  function codegen(apexSrc: string) {
-    const doc = parse(apexSrc, (name) => {
+  let apexSource = apexExample;
+  function changed(apexSrc: string) {
+    apexSource = apexSrc;
+  }
+
+  function codegen() {
+    const doc = parse(apexSource, (name) => {
       console.warn(
         `Can not import apex files (i.e. '${name}') in this online editor`
       );
       return "";
     });
 
-    // Code should only be generated for the active tab, but I can't figure
-    // out how to find that in a React-y way. If you can, please fix this.
-    const newState = Object.fromEntries(
-      tabDefs.map((def) => [def.id, generate(doc, def.visitor, {})])
-    );
+    const lang = (document.querySelector("#language") as HTMLSelectElement)
+      .value;
 
-    updateState(newState);
+    const def = langDefs.find((def) => def.id === lang);
+    console.log(def);
 
-    return apexSrc;
+    const code = generate(doc, def?.visitor, {});
+
+    updateState({ code, lang: def?.lang! });
   }
 
   let codeStyle = { height: "550px", overflow: "auto", borderRadius: "4px" };
 
-  let tabDefs = [
+  let langDefs = [
     {
-      label: "Proto",
+      label: "Proto3 Schema",
       lang: "protobuf",
       id: "protobuf",
       visitor: ProtoVisitor,
@@ -160,17 +165,23 @@ const ApexEditor: React.FC<Props> = (props) => {
     },
   ];
 
-  let tabs = tabDefs.map((def) => (
-    <TabItem value={def.id} label={def.label} key={def.id}>
-      <div style={codeStyle}>
-        <CodeBlock language={def.lang} className={styles.codeblock}>
-          {state[def.id]}
-        </CodeBlock>
-      </div>
-    </TabItem>
+  let codeblock = (
+    <CodeBlock language={state.lang} className={styles.codeblock}>
+      {state.code}
+    </CodeBlock>
+  );
+
+  let options = langDefs.map((def) => (
+    <option value={def.id} key={def.id}>
+      {def.label}
+    </option>
   ));
 
-  let tabList = <Tabs>{tabs}</Tabs>;
+  let dropdown = (
+    <select id="language" onChange={(evt) => codegen()}>
+      {options}
+    </select>
+  );
 
   return (
     <div className={clsx(styles.Container, className)}>
@@ -190,8 +201,10 @@ const ApexEditor: React.FC<Props> = (props) => {
                 <LiveEditor
                   onChange={(src) => {
                     try {
-                      codegen(src);
+                      changed(src);
+                      codegen();
                       updateParseError("");
+                      return src;
                     } catch (e) {
                       console.error(e);
                       updateParseError(e.toString());
@@ -203,7 +216,11 @@ const ApexEditor: React.FC<Props> = (props) => {
           </div>
           <div className="col col--6">
             <div style={{ position: "relative" }}>
-              {tabList}
+              <div className={styles.dropdown}>
+                <h2>Generate</h2>
+                {dropdown}
+              </div>
+              <div style={codeStyle}>{codeblock}</div>
               <div
                 className={styles.error}
                 style={{ display: parseError ? "flex" : "none" }}
