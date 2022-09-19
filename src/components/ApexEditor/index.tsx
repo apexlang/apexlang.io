@@ -13,6 +13,7 @@ import { InterfacesVisitor as GoVisitor } from "@apexlang/codegen/go";
 import { RustBasic as RustVisitor } from "@apexlang/codegen/rust";
 import { JsonSchemaVisitor } from "@apexlang/codegen/json-schema";
 import { ProtoVisitor } from "@apexlang/codegen/proto";
+import { OpenAPIV3Visitor } from "@apexlang/codegen/openapiv3";
 import { InterfacesVisitor as TypeScriptVisitor } from "@apexlang/codegen/typescript";
 import { InterfacesVisitor as PythonVisitor } from "@apexlang/codegen/python";
 
@@ -26,16 +27,16 @@ export function generate(doc, Visitor, config) {
 }
 
 const apexExample = `
-namespace "petstore"
+namespace "petstore" @path("/v1")
 
 "The Order service is the primary interface for ordering new pets."
-interface Order @service {
+interface Order @service @path("/orders") {
   "Query the current inventory of pets."
-  inventory(): Inventory
+  inventory(): Inventory @GET
   "Order a new pet. (unary operation)"
-  order[order: OrderRequest @n(1)]: Order
+  order[order: OrderRequest @n(1)]: Order @POST
   "Check the status of your order."
-  orderStatus(id: UUID @n(1)): Order
+  orderStatus(id: UUID @n(1)): Order @GET @path("/{id}")
 }
 
 "An OrderRequest contains the adopter ID and the ID of the pet being purchased."
@@ -119,7 +120,7 @@ const ApexEditor: React.FC<Props> = (props) => {
     const def = langDefs.find((def) => def.id === lang);
     console.log(def);
 
-    const code = generate(doc, def?.visitor, {});
+    const code = generate(doc, def?.visitor, def?.config);
 
     updateState({ code, lang: def?.lang! });
   }
@@ -131,36 +132,63 @@ const ApexEditor: React.FC<Props> = (props) => {
       label: "Proto3 Schema",
       lang: "protobuf",
       id: "protobuf",
+      config: {
+        "$filename": "orders.proto",
+      },
       visitor: ProtoVisitor,
+    },
+    {
+      label: "OpenAPI v3",
+      lang: "yaml",
+      id: "openapi",
+      config: {
+        "$filename": "orders.yaml",
+      },
+      visitor: OpenAPIV3Visitor,
     },
     {
       label: "JSON Schema",
       lang: "json",
       id: "jsonschema",
+      config: {
+        "$filename": "orders.json",
+      },
       visitor: JsonSchemaVisitor,
     },
     {
       label: "Rust",
       lang: "rust",
       id: "rust",
+      config: {
+        "$filename": "interfaces.rs",
+      },
       visitor: RustVisitor,
     },
     {
       label: "Go",
       lang: "go",
       id: "golang",
+      config: {
+        "$filename": "interfaces.go",
+      },
       visitor: GoVisitor,
     },
     {
       label: "TypeScript",
       lang: "typescript",
       id: "typescript",
+      config: {
+        "$filename": "interfaces.ts",
+      },
       visitor: TypeScriptVisitor,
     },
     {
       label: "Python",
       lang: "python",
       id: "python",
+      config: {
+        "$filename": "interfaces.py",
+      },
       visitor: PythonVisitor,
     },
   ];
