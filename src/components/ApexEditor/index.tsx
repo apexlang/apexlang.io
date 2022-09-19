@@ -32,8 +32,8 @@ namespace "petstore"
 interface Order @service {
   "Query the current inventory of pets."
   inventory(): Inventory
-  "Order a new pet."
-  order(order: OrderRequest @n(1)): Order
+  "Order a new pet. (unary operation)"
+  order[order: OrderRequest @n(1)]: Order
   "Check the status of your order."
   orderStatus(id: UUID @n(1)): Order
 }
