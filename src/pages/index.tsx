@@ -52,7 +52,7 @@ function HomepageHeader() {
           </div>
           <p>
             <span className={styles.separatorText}>Apex</span> is an interface
-            description language for modeling software. <br />
+            definition language (IDL) for modeling software. <br />
             Generate source code, documentation, integration,{" "}
             <span className={styles.separatorText}>everything</span>{" "}
             automatically.
