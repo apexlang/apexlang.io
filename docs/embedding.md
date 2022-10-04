@@ -4,6 +4,12 @@ sidebar_position: 7
 
 # Embedding Apex into Apps
 
+Apex is most commonly used as a code generator for your projects. In some cases, your system may need to read in the information captured in an Apex specification. This could be useful for platforms or tools to inspect specifications dynamically. Some examples include:
+
+* Validating or sanitizing input data
+* Comparing two versions to detect a breaking change
+* Discovering data elements that are sensitive (PCI/DSS) or encrypted
+
 ## Libraries
 
 Apex natively supports TypeScript and Go.
@@ -18,9 +24,65 @@ To reach a broader set of languages, the Apex Go parser is also released as a We
 
 ### Download
 
-The latest **apex-parser.wasm** can be downloaded from the [Apex Go releases page](https://github.com/apexlang/apex-go/releases). The JSON representation is [documented here using Apex](https://github.com/apexlang/apex-go/blob/main/model.apexlang).
+Two implementations of the Wasm module can be downloaded from the [Apex Go releases page](https://github.com/apexlang/apex-go/releases).
 
-### Parsing and validating
+* **[waPC](https://github.com/apexlang/apex-go/releases/latest/download/apex-wapc.wasm)** - Uses the [waPC protocol](https://wapc.io/docs/spec/) to invoke the Apex parser. This is the easiest method for integration, however you must be using a programming language that has a [waPC host implementation](https://github.com/wapc).
+* **[Core Wasm](https://github.com/apexlang/apex-go/releases/latest/download/apex-parser.wasm)** - Loadable by any programming language with a WebAssembly runtime (e.g. [Wasmtime](https://wasmtime.dev)); however, puts the responsibility of passing in the specification on your application.
+
+Each parser accepts an Apex specification as a string and returns the JSON string represention. The JSON follows [this schema](https://github.com/apexlang/apex-go/blob/main/model.apexlang).
+
+### waPC <small>(apex-wapc.wasm)</small>
+
+#### `parse` guest call
+
+Operation: `apexlang.v1.Parser/parse`
+
+Input formatted as [MsgPack](https://msgpack.org)
+
+```json
+{
+  "source": "... Apex specification as string ..."
+}
+```
+
+Output formatted as [MsgPack](https://msgpack.org)
+
+```json
+{
+  "namespace": { /* The parsed Apex namespace. See model spec. */ },
+  /* or */
+  "errors": [
+    {
+      "message": "... The error message ...",
+      "positions": [ 1032 /* array of positions in the document where the error occurs*/ ],
+      "locations": [
+        {
+          "line": 123, /* The line number of the error */
+          "column": 10 /* The column number of the error */
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### `resolve` host call
+
+Namespace: `apexlang.v1.Resolver`<br/>
+Operation: `resolve`
+
+Input formatted as [MsgPack](https://msgpack.org)
+
+```json
+{
+  "location": "The imported specification to resolve",
+  "from": "The specification performing the import"
+}
+```
+
+### Core Wasm <small>(apex-perser.wasm)</small>
+
+#### Parsing and validating
 
 The Wasm module exposes 3 functions:
 
@@ -49,7 +111,7 @@ Embedding Apex parsing in your application follows these steps:
 
 If the returned string starts with `error:` then the string represents and error in the parser. Otherwise, it contains a valid JSON representation of your Apex specification.
 
-### Resolving imports
+#### Resolving imports
 
 If a specification contains imports, the module makes a host call to `apex::resolve` to retrieve the contents of the imported specification.
 
@@ -57,6 +119,6 @@ If a specification contains imports, the module makes a host call to `apex::reso
 
 `location` and `from` are string values. `location` is the specification to load and `from` is the specification performing the import. The Apex CLI installs importable definitions in `~/.apex/definitions` your implementation could load them from alternate locations.
 
-### Example
+#### Example
 
 [Here is an example](https://github.com/apexlang/apex-go/blob/main/cmd/host/main.go) using [wazero](https://wazero.io/) to invoke the Apex parser.
