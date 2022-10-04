@@ -14,7 +14,7 @@ Apex natively supports TypeScript and Go.
 
 ## WebAssembly module
 
-To reach a broader set of languages, the Apex Go parser is also released as a WebAssembly module and loadable via a Wasm runtime such as [Wasmtime](https://wasmtime.dev). The module parsers and validates an Apex specification and returns a JSON representation that is easier to interpret in languages with JSON support.
+To reach a broader set of languages, the Apex Go parser is also released as a WebAssembly module and loadable via a Wasm runtime such as [Wasmtime](https://wasmtime.dev). The module parses and validates an Apex specification and returns a JSON representation that is easier to interpret in languages with JSON support.
 
 ### Download
 
