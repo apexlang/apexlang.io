@@ -4,7 +4,7 @@ sidebar_position: 7
 
 # Embedding Apex into Apps
 
-Apex is most commonly used as a code generator for your projects. In some cases, your system may need to read in the information comtained in an Apex specification. This could be useful for platforms or tools to inspect specifications dynamically. Some scenarios include:
+Apex is most commonly used as a code generator for your projects. In some cases, your system may need to read in the information contained in an Apex specification. This could be useful for platforms or tools to inspect specifications dynamically. Some scenarios include:
 
 * Validating or sanitizing input data
 * Comparing two versions to detect a breaking change
