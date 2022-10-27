@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.css";
 import clsx from "clsx";
 import { LiveProvider, LiveEditor, LiveError } from "react-live";
 import CodeBlock from "@theme/CodeBlock";
 import theme from "prism-react-renderer/themes/vsDark";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import { parse } from "@apexlang/core";
 import { Context, Writer } from "@apexlang/core/model";
 
@@ -26,18 +24,68 @@ export function generate(doc, Visitor, config) {
   return source;
 }
 
-const apexExample = `
-namespace "petstore" @path("/v1")
+const simpleExample = `
+namespace "petstore"
+
+"An OrderRequest contains the adopter ID and the ID of the pet being purchased."
+type OrderRequest {
+  "An adopter's user id"
+  adopter: u32
+  "A pet's pet id"
+  pet: u32
+}
+
+type Order {
+  "The order ID."
+  id: UUID
+  "An adopter's user id."
+  adopter: u32
+  "A pet's pet id."
+  pet: u32
+  "The date the order was placed."
+  date: datetime
+  "The order status."
+  status: OrderStatus
+  "Whether or not the order is considered complete, regardless of status."
+  complete: bool
+}
+
+"A UUID v4 string"
+alias UUID = string
+
+"The OrderStatus enum represents all statuses an order can be in."
+enum OrderStatus {
+  "The order has been placed."
+  placed = 0
+  "The order has been shipped."
+  shipped = 1
+  "The order has been canceled."
+  canceled = 2
+}
+
+"The Inventory structure contains summary information of the Pet Store's inventory."
+type Inventory {
+  "Total number of pets sold."
+  sold: u32
+  "Total number of new pets."
+  new: u32
+  "Total number of available pets."
+  available: u32
+}
 
 "The Order service is the primary interface for ordering new pets."
-interface Order @service @path("/orders") {
+interface Order {
   "Query the current inventory of pets."
-  inventory(): Inventory @GET
+  inventory(): Inventory
   "Order a new pet. (unary operation)"
-  order[order: OrderRequest @n(1)]: Order @POST
+  order[order: OrderRequest]: Order
   "Check the status of your order."
-  orderStatus(id: UUID @n(1)): Order @GET @path("/{id}")
+  orderStatus(id: UUID): Order
 }
+`.trim();
+
+const advancedExample = `
+namespace "petstore" @path("/v1")
 
 "An OrderRequest contains the adopter ID and the ID of the pet being purchased."
 type OrderRequest {
@@ -84,6 +132,16 @@ type Inventory {
   "Total number of available pets."
   available: u32 @n(3)
 }
+
+"The Order service is the primary interface for ordering new pets."
+interface Order @service @path("/orders") {
+  "Query the current inventory of pets."
+  inventory(): Inventory @GET
+  "Order a new pet. (unary operation)"
+  order[order: OrderRequest @n(1)]: Order @POST
+  "Check the status of your order."
+  orderStatus(id: UUID @n(1)): Order @GET @path("/{id}")
+}
 `.trim();
 
 export type Props = {
@@ -98,10 +156,10 @@ export type Props = {
 const ApexEditor: React.FC<Props> = (props) => {
   const { className } = props;
   const [parseError, updateParseError] = useState("");
-
   const [state, updateState] = useState({ code: "", lang: "" });
+  const [src, updateSrc] = useState(simpleExample);
 
-  let apexSource = apexExample;
+  let apexSource = advancedExample;
   function changed(apexSrc: string) {
     apexSource = apexSrc;
   }
@@ -125,51 +183,28 @@ const ApexEditor: React.FC<Props> = (props) => {
     updateState({ code, lang: def?.lang! });
   }
 
-  let codeStyle = { height: "550px", overflow: "auto", borderRadius: "4px" };
+  let codeStyle = {
+    height: "550px",
+    overflow: "auto",
+    borderRadius: "4px",
+  };
 
   let langDefs = [
     {
-      label: "Proto3 Schema",
-      lang: "protobuf",
-      id: "protobuf",
+      label: "Python",
+      lang: "python",
+      id: "python",
       config: {
-        "$filename": "orders.proto",
+        $filename: "interfaces.py",
       },
-      visitor: ProtoVisitor,
-    },
-    {
-      label: "OpenAPI v3",
-      lang: "yaml",
-      id: "openapi",
-      config: {
-        "$filename": "orders.yaml",
-      },
-      visitor: OpenAPIV3Visitor,
-    },
-    {
-      label: "JSON Schema",
-      lang: "json",
-      id: "jsonschema",
-      config: {
-        "$filename": "orders.json",
-      },
-      visitor: JsonSchemaVisitor,
-    },
-    {
-      label: "Rust",
-      lang: "rust",
-      id: "rust",
-      config: {
-        "$filename": "interfaces.rs",
-      },
-      visitor: RustVisitor,
+      visitor: PythonVisitor,
     },
     {
       label: "Go",
       lang: "go",
       id: "golang",
       config: {
-        "$filename": "interfaces.go",
+        $filename: "interfaces.go",
       },
       visitor: GoVisitor,
     },
@@ -178,18 +213,46 @@ const ApexEditor: React.FC<Props> = (props) => {
       lang: "typescript",
       id: "typescript",
       config: {
-        "$filename": "interfaces.ts",
+        $filename: "interfaces.ts",
       },
       visitor: TypeScriptVisitor,
     },
     {
-      label: "Python",
-      lang: "python",
-      id: "python",
+      label: "Rust",
+      lang: "rust",
+      id: "rust",
       config: {
-        "$filename": "interfaces.py",
+        $filename: "interfaces.rs",
       },
-      visitor: PythonVisitor,
+      visitor: RustVisitor,
+    },
+
+    {
+      label: "Proto3 Schema",
+      lang: "protobuf",
+      id: "protobuf",
+      config: {
+        $filename: "orders.proto",
+      },
+      visitor: ProtoVisitor,
+    },
+    {
+      label: "OpenAPI v3",
+      lang: "yaml",
+      id: "openapi",
+      config: {
+        $filename: "orders.yaml",
+      },
+      visitor: OpenAPIV3Visitor,
+    },
+    {
+      label: "JSON Schema",
+      lang: "json",
+      id: "jsonschema",
+      config: {
+        $filename: "orders.json",
+      },
+      visitor: JsonSchemaVisitor,
     },
   ];
 
@@ -210,37 +273,62 @@ const ApexEditor: React.FC<Props> = (props) => {
       {options}
     </select>
   );
+  const inner = (
+    <LiveEditor
+      className={styles.codeEditor}
+      onChange={(src) => {
+        try {
+          changed(src);
+          codegen();
+          updateParseError("");
+          return src;
+        } catch (e) {
+          console.error(e);
+          updateParseError(e.toString());
+        }
+      }}
+    />
+  );
+  const editor = (
+    <LiveProvider
+      code={src}
+      language="apexlang"
+      theme={theme}
+      transformCode={() => "''"}
+    >
+      <div style={codeStyle}>{inner}</div>
+    </LiveProvider>
+  );
+
+  function changeSource(evt) {
+    console.log(evt.target.value);
+    if (evt.target.value === "simple") {
+      updateSrc(simpleExample);
+    } else {
+      updateSrc(advancedExample);
+    }
+  }
 
   return (
     <div className={clsx(styles.Container, className)}>
       <div className="container">
         <div className="row">
           <div className="col col--6">
-            <h1 style={{ textAlign: "center", lineHeight: "4rem" }}>
-              {props.defaultTitle}
-            </h1>
-            <LiveProvider
-              code={apexExample}
-              language="apexlang"
-              theme={theme}
-              transformCode={() => "''"}
-            >
-              <div style={codeStyle}>
-                <LiveEditor
-                  onChange={(src) => {
-                    try {
-                      changed(src);
-                      codegen();
-                      updateParseError("");
-                      return src;
-                    } catch (e) {
-                      console.error(e);
-                      updateParseError(e.toString());
-                    }
-                  }}
-                />
-              </div>
-            </LiveProvider>
+            <div className={styles.dropdown}>
+              <h2>
+                Explore{" "}
+                <select id="example" onChange={changeSource}>
+                  <option value="simple" key="simple">
+                    a Simple
+                  </option>
+                  <option value="advanced" key="advanced">
+                    an Advanced
+                  </option>
+                </select>{" "}
+                schema
+              </h2>
+            </div>
+            {editor}
           </div>
           <div className="col col--6">
             <div style={{ position: "relative" }}>
