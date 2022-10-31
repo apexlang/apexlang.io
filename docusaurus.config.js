@@ -45,7 +45,7 @@ const config = {
           customCss: require.resolve("./src/css/custom.css"),
         },
         gtag: {
-          trackingID: 'G-WX664KEGDE',
+          trackingID: "G-WX664KEGDE",
         },
       }),
     ],
@@ -63,7 +63,7 @@ const config = {
         items: [
           {
             type: "doc",
-            docId: "introduction",
+            docId: "getting-started",
             position: "left",
             label: "Docs",
           },
@@ -83,7 +83,7 @@ const config = {
             items: [
               {
                 label: "Introduction",
-                to: "/docs/introduction",
+                to: "/docs/getting-started",
               },
             ],
           },
