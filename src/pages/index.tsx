@@ -4,6 +4,7 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import HomepageFeatures from "../components/HomepageFeatures";
+import CodeBlock from '@theme/CodeBlock';
 
 import styles from "./index.module.css";
 import HeaderTyper from "../components/HeaderTyper";
@@ -79,6 +80,21 @@ function HomepageHeader() {
   );
 }
 
+function Installation() {
+  return (
+    <div>
+      <div className="col text--center">
+        <h1 >Installation</h1>
+
+        <p >Get Apex by running the following command
+        </p>
+      </div>
+      <CodeBlock className="codeBlock" language="shell">{"deno install -A --unstable -f -n apex https://deno.land/x/apex_cli/apex.ts"}</CodeBlock>
+
+    </div>)
+
+}
+
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   return (
@@ -88,6 +104,13 @@ export default function Home() {
     >
       <HomepageHeader />
       <main>
+        <div className="container" style={{ marginTop: "2rem" }}>
+          <section className="row">
+            <div className="col">
+              <Installation />
+            </div>
+          </section></div>
+
         <HomepageFeatures />
         <section className="row" style={{ marginBottom: "2rem" }}>
           <div className="col">
