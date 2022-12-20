@@ -29,6 +29,10 @@ export const os = () => {
   return "windows"
 }
 
+```shell
+powershell -Command "iwr -useb https://apexlang.io/install.ps1 | iex"
+```
+
 <Tabs
   defaultValue={os()}
   values={[
