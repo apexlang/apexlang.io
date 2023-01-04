@@ -22,7 +22,7 @@ config:
   package: myapp
 generates:
   pkg/myapp/interfaces.go:
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/go/mod.ts'
     visitorClass: InterfacesVisitor
     config:
       # Used by ImportsVisitor, AliasVisitor
