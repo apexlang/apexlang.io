@@ -20,7 +20,7 @@ This visitor creates a `.proto` file for all `@service` interfaces using [protoc
 ```yaml
 generates:
   proto/service.proto:
-    module: '@apexlang/codegen/proto'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/proto/mod.ts'
     visitorClass: ProtoVisitor
     config:
       options:
