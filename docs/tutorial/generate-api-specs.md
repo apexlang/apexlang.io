@@ -30,14 +30,14 @@ info:
   title: Simple URL shortener API
   description: Simple API for shortening URLs created using Apex.
   version: 1.0.0
-  termsOfService: https://api.goodcorp.com/terms/
+  termsOfService: 'https://api.goodcorp.com/terms/'
   contact:
     name: API Support
-    url: https://api.goodcorp.com/support
+    url: 'https://api.goodcorp.com/support'
     email: api@goodcorp.com
   license:
     name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
 paths:
   /v1/shorten:
     put:
@@ -50,7 +50,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/URL"
+                $ref: '#/components/schemas/URL'
       tags:
         - Shortener
       requestBody:
@@ -63,7 +63,7 @@ paths:
               required:
                 - url
         required: true
-  "/v1/{id}":
+  '/v1/{id}':
     get:
       operationId: lookup
       summary: Return the URL using the generated identifier.
@@ -74,7 +74,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/URL"
+                $ref: '#/components/schemas/URL'
       tags:
         - Shortener
       parameters:
@@ -83,6 +83,9 @@ paths:
           required: true
           schema:
             type: string
+tags:
+  - name: Shortener
+    description: The URL shortening service.
 components:
   schemas:
     URL:
@@ -98,11 +101,7 @@ components:
       required:
         - id
         - url
-tags:
-  - name: Shortener
-    description: The URL shortening service.
-servers:
-  - url: https://api.goodcorp.com
+
 ```
 
 :::info
@@ -123,9 +122,9 @@ option go_package = "github.com/myorg/myapps/pkg/urlshortener";
 // The URL shortening service.
 service Shortener {
   // Shorten a URL and return a generated identifier.
-  rpc Shorten(ShortenArgs) returns (URL) {};
+  rpc Shorten(ShortenerShortenArgs) returns (URL) {};
   // Return the URL using the generated identifier.
-  rpc Lookup(LookupArgs) returns (URL) {};
+  rpc Lookup(ShortenerLookupArgs) returns (URL) {};
 }
 
 // URL encapsulates the dynamic identifier and the URL it points to.
@@ -136,11 +135,11 @@ message URL {
   string url = 2;
 }
 
-message ShortenArgs {
+message ShortenerShortenArgs {
   string url = 1;
 }
 
-message LookupArgs {
+message ShortenerLookupArgs {
   string id = 1;
 }
 ```

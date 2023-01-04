@@ -28,7 +28,7 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 Update `apex.yaml` with the contents below.
 
 ```yaml title="apex.yaml"
-spec: spec.apexlang
+spec: apex.axdl
 config:
   package: urlshortener
   module: github.com/apexlang/getting-started
@@ -37,14 +37,14 @@ config:
     interface: logr.Logger
 generates:
   openapi.yaml:
-    module: '@apexlang/codegen/openapiv3'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/openapiv3/mod.ts'
     visitorClass: OpenAPIV3Visitor
   proto/service.proto:
-    module: '@apexlang/codegen/proto'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/proto/mod.ts'
     visitorClass: ProtoVisitor
     config:
       options:
-        go_package: github.com/apexlang/getting-started/proto
+        go_package: 'github.com/myorg/myapps/pkg/urlshortener'
     runAfter:
       - command: |
           protoc
@@ -54,33 +54,33 @@ generates:
           --go-grpc_opt=paths=source_relative
           proto/service.proto
   pkg/urlshortener/interfaces.go:
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/go/mod.ts'
     visitorClass: InterfacesVisitor
   pkg/urlshortener/fiber.go:
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/go/mod.ts'
     visitorClass: FiberVisitor
   pkg/urlshortener/grpc.go:
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/go/mod.ts'
     visitorClass: GRPCVisitor
     config:
       protoPackage: github.com/apexlang/getting-started/proto
   pkg/urlshortener/services.go:
     ifNotExists: true
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/go/mod.ts'
     visitorClass: ScaffoldVisitor
     config:
       types:
         - service
   pkg/urlshortener/repositories.go:
     ifNotExists: true
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/go/mod.ts'
     visitorClass: ScaffoldVisitor
     config:
       names:
         - Repository
   cmd/main.go:
     ifNotExists: false  # Change to true to control dependency injection
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.1/go/mod.ts'
     visitorClass: MainVisitor
 ```
 
