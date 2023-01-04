@@ -5,9 +5,9 @@ sidebar_position: 2
 # Project Templates
 
 ```cli
-apex new git@github.com:apexlang/codegen.git -p templates/generator greeter \
-    module=github.com/apexlang/greeter \
-    package=greeter
+apex new https://git@github.com/apexlang/codegen.git -p templates/go greeter \
+    --var module=github.com/apexlang/greeter \
+    --var package=greeter
 ```
 
 TODO
