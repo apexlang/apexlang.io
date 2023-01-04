@@ -9,9 +9,9 @@ In this tutorial, you will be creating a specification for a very simple **URL S
 
 ## Create your first Apex spec
 
-Create a directory called `urlshortener` containing a file named `spec.apexlang`. Populate it with the contents below:
+Create a directory called `urlshortener` containing a file named `apex.axdl`. Populate it with the contents below:
 
-```apexlang title="spec.apexlang"
+```apexlang title="apex.axdl"
 import * from "@apexlang/core"
 import * from "@apexlang/rest"
 import * from "@apexlang/openapi"
@@ -32,7 +32,7 @@ namespace "urlshortener.v1"
       url: "https://www.apache.org/licenses/LICENSE-2.0"
     }
   )
-  @server(url: "https://api.goodcorp.com")
+  @host("https://api.goodcorp.com")
   @path("/v1")
 
 "The URL shortening service."
@@ -76,4 +76,4 @@ Let's summarize what is captured in the **URL Shortener** service specification 
 * `URL` is the data structure returned by the operations in `Shortener`. The `@n` annotations on fields and parameters specify the field number and required for serialization formats like Protobuf. The `@rename` annotation is used to override the field name to fit the naming standards of a language.
 * Every role, operation, type, and field has a description (enclosed in "") which passes through to generated files. For generated code, these descriptions are available inside your IDE.
 
-This example highlights common elements you will use in your own specifications. If you are curious if you can create your own imports and directives, the answer is Yes! Apex is designed for extensibility. That will be covered later in [custom generators](/docs/customization/custom-generators).
+This example highlights common elements you will use in your own specifications. If you are curious if you can create your own imports and directives, the answer is Yes! Apex is designed for extensibility. That will be covered later in custom generators.
