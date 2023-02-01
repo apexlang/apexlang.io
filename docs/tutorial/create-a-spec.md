@@ -1,13 +1,13 @@
 ---
 sidebar_position: 1
-title: Create an Apex Spec
+title: Create an Apexlang Spec
 ---
 
-# Create an Apex Specification
+# Create an Apexlang Specification
 
 In this tutorial, you will be creating a specification for a very simple **URL Shortener** service. This specification will include extensions for generation of OpenAPI v3 and gRPC proto documents.
 
-## Create your first Apex spec
+## Create your first Apexlang spec
 
 Create a directory called `urlshortener` containing a file named `apex.axdl`. Populate it with the contents below:
 
@@ -19,7 +19,7 @@ import * from "@apexlang/openapi"
 namespace "urlshortener.v1"
   @info(
     title: "Simple URL shortener API"
-    description: "Simple API for shortening URLs created using Apex."
+    description: "Simple API for shortening URLs created using Apexlang."
     version: "1.0.0"
     termsOfService: "https://api.goodcorp.com/terms/"
     contact: {
@@ -76,4 +76,4 @@ Let's summarize what is captured in the **URL Shortener** service specification 
 * `URL` is the data structure returned by the operations in `Shortener`. The `@n` annotations on fields and parameters specify the field number and required for serialization formats like Protobuf. The `@rename` annotation is used to override the field name to fit the naming standards of a language.
 * Every role, operation, type, and field has a description (enclosed in "") which passes through to generated files. For generated code, these descriptions are available inside your IDE.
 
-This example highlights common elements you will use in your own specifications. If you are curious if you can create your own imports and directives, the answer is Yes! Apex is designed for extensibility. That will be covered later in custom generators.
+This example highlights common elements you will use in your own specifications. If you are curious if you can create your own imports and directives, the answer is Yes! Apexlang is designed for extensibility. That will be covered later in custom generators.

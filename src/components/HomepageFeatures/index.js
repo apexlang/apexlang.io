@@ -1,50 +1,63 @@
-import React from "react";
-import clsx from "clsx";
-import styles from "./styles.module.css";
+import React from 'react';
+import clsx from 'clsx';
+import styles from './styles.module.css';
+
+const apexCmd = { fontFamily: 'monospace', fontSize: '14pt' };
 
 const FeatureList = [
   {
-    title: '<span style="text-decoration: underline;">A</span>pproachable',
-    Svg: require("@site/static/img/01-approachable.svg").default,
+    title: 'Project Templates',
+    Svg: require('@site/static/img/02-protocol-agnostic.svg').default,
+    url: '/docs/customization/project-templates',
     description: (
       <>
-        Apex was designed from the ground up to be succinct. Interfaces and data
-        types are described using familiar syntax that won't slow you down.
+        Use <span style={apexCmd}>apex new</span> to start projects from
+        boilerplate templates customized to your needs.
       </>
     ),
   },
   {
-    title: '<span style="text-decoration: underline;">P</span>rotocol agnostic',
-    Svg: require("@site/static/img/02-protocol-agnostic.svg").default,
+    title: 'Task Runner',
+    Svg: require('@site/static/img/01-approachable.svg').default,
+    url: '/docs/customization/task-runner',
     description: (
       <>
-        Regardless of the architecture, your data and interfaces are
-        fundamentally the same. Use Apex to generate code for any serialization
-        format or protocol.
+        Define tasks the same way across any project and execute them with{' '}
+        <span style={apexCmd}>apex run</span>.
       </>
     ),
   },
   {
-    title: '<span style="text-decoration: underline;">Ex</span>tensible',
-    Svg: require("@site/static/img/03-extensible.svg").default,
+    title: 'Code Generators',
+    Svg: require('@site/static/img/03-extensible.svg').default,
+    url: '/docs/tutorial/create-a-spec',
     description: (
       <>
-        Generators are written in TypeScript. Easily add custom generators that
-        satisfy your unique needs and publish them for everyone to use.
+        Define your interfaces and types with the{' '}
+        <a href="/docs/specification" style={{ fontWeight: 'bold' }}>
+          Apexlang IDL
+        </a>
+        , then use <span style={apexCmd}>apex generate</span> to automatically
+        create source code, documentation, and schemas.
       </>
     ),
   },
 ];
 
-function Feature({ Svg, title, description }) {
+function Feature({ Svg, title, url, description }) {
   return (
-    <div className={clsx("col col--4")}>
+    <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        <a href={url}>
+          <Svg className={styles.featureSvg} role="img" />
+        </a>
       </div>
       <div className="text--center padding-horiz--md">
         <h3 dangerouslySetInnerHTML={{ __html: title }}></h3>
         <p>{description}</p>
+        <a href={url} style={{ fontWeight: 'bold' }}>
+          Read more...
+        </a>
       </div>
     </div>
   );

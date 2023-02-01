@@ -4,7 +4,7 @@ sidebar_position: 6
 
 # Congratulations!
 
-You have just learned the **basics of Apex** and described a simple **URL Shortener** service. Obviously, this service is extremely minimal and does not implement common requirements like authorization and distributed tracing. Typically, organizations have their own way of structuring APIs that fit their own policies and specific needs. The idea behind Apex is to provide flexible tools that can be used as a foundation for implementing *any* kind of tailored output.
+You have just learned the **basics of Apexlang** and described a simple **URL Shortener** service. Obviously, this service is extremely minimal and does not implement common requirements like authorization and distributed tracing. Typically, organizations have their own way of structuring APIs that fit their own policies and specific needs. The idea behind Apexlang is to provide flexible tools that can be used as a foundation for implementing *any* kind of tailored output.
 
 Have **15 more minutes**? Take a look at **[project templates](/docs/customization/project-templates)**.
 
@@ -16,4 +16,4 @@ Run into a case where the code generator didn't produce what it should? [Please 
 
 - Read the [language  specification](/docs/specification)
 - Create a [project template](/docs/customization/project-templates)
-- Get involved in the [Apex Community](https://apexlang.io/community/support)
+- Get involved in the [Apexlang Community](https://apexlang.io/community/support)

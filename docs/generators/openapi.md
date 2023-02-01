@@ -4,7 +4,7 @@ title: OpenAPI
 
 # OpenAPI Specification
 
-Generate [Swagger/OpenAPI specification](https://swagger.io/specification/) files using Apex.
+Generate [Swagger/OpenAPI specification](https://swagger.io/specification/) files using Apexlang.
 
 ## OpenAPIV3Visitor
 

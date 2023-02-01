@@ -6,7 +6,7 @@ sidebar_position: 6
 
 ### Namespace
 
-Declared at the top of the Apex document, the `namespace` is used to identify and refer to elements contained in the Apex document. It may be used by the code generator to target filesystem locations of where to write generated files.
+Declared at the top of the Apexlang document, the `namespace` is used to identify and refer to elements contained in the Apexlang document. It may be used by the code generator to target filesystem locations of where to write generated files.
 
 ```apexlang
 namespace "customers"
@@ -20,25 +20,25 @@ namespace "customers.v1"
 
 ### Scalar Types
 
-Instead of using the `number` type for all numeric values, Apex inherits more specific integer and floating point types:
+Instead of using the `number` type for all numeric values, Apexlang inherits more specific integer and floating point types:
 
-| Apex Type  | Description                |
-| ---------- | -------------------------- |
-| `i8`       | A 8-bit signed integer.    |
-| `u8`       | A 8-bit unsigned integer.  |
-| `i16`      | A 16-bit signed integer.   |
-| `u16`      | A 16-bit unsigned integer. |
-| `i32`      | A 32-bit signed integer.   |
-| `u32`      | A 32-bit unsigned integer. |
-| `i64`      | A 64-bit signed integer.   |
-| `u64`      | A 64-bit unsigned integer. |
-| `f32`      | A 32-bit float.            |
-| `f64`      | A 64-bit float.            |
-| `bool`     | A boolean.                 |
+| Apexlang Type  | Description                |
+| -------------- | -------------------------- |
+| `i8`           | A 8-bit signed integer.    |
+| `u8`           | A 8-bit unsigned integer.  |
+| `i16`          | A 16-bit signed integer.   |
+| `u16`          | A 16-bit unsigned integer. |
+| `i32`          | A 32-bit signed integer.   |
+| `u32`          | A 32-bit unsigned integer. |
+| `i64`          | A 64-bit signed integer.   |
+| `u64`          | A 64-bit unsigned integer. |
+| `f32`          | A 32-bit float.            |
+| `f64`          | A 64-bit float.            |
+| `bool`         | A boolean.                 |
 
-Apex also includes the following special types that are decoded into language-specific types:
+Apexlang also includes the following special types that are decoded into language-specific types:
 
-| Apex Type  | Description                                                              |
+| Apexlang Type  | Description                                                              |
 | ---------- | ------------------------------------------------------------------------ |
 | `string`   | a UTF-8 encoded string.                                                  |
 | `datetime` | a RFC 3339 formatted date / time / timezone.                             |
@@ -50,7 +50,7 @@ Apex also includes the following special types that are decoded into language-sp
 
 Types can be encapsulated in arrays and maps with enclosing syntax:
 
-| Collection | Apex Syntax         | Description                                  |
+| Collection | Apexlang Syntax         | Description                                  |
 | ---------- | ------------------- | -------------------------------------------- |
 | Array      | `[string]`          | A randomly accessible sequence of values.    |
 | Map        | `{string : string}` | A mapping of keys to values. Keys must be an integer or string. Values can be any scalar type or object type. |
@@ -67,7 +67,7 @@ Functions are independent operations and allow two styles for accepting input: *
 
 #### Parameterized operations
 
-Parameterized operations are familiar function signatures. They accept zero or more parameters and are generated with the same signature defined in Apex. This style is recommended when passing in a small number of fields and follow a simple, familiar, and easy to read format. All parameters must be named. In this example, we pass in first and last names to create a customer and return its new identifier as a `u64`.
+Parameterized operations are familiar function signatures. They accept zero or more parameters and are generated with the same signature defined in Apexlang. This style is recommended when passing in a small number of fields and follow a simple, familiar, and easy to read format. All parameters must be named. In this example, we pass in first and last names to create a customer and return its new identifier as a `u64`.
 
 ```apexlang
 func createCustomer(firstName: string, lastName: string): u64
@@ -151,11 +151,11 @@ type Person {
 }
 ```
 
-Invoking... 
+Invoking...
 
 ```typescript
 greeting(new Person {
-  firstName: "Apex",
+  firstName: "Apexlang",
   lastName:  "Lang",
 })
 ```
@@ -164,7 +164,7 @@ would serialize in JSON as:
 
 ```json
 {
-  "firstName": "Apex",
+  "firstName": "Apexlang",
   "lastName": "Lang"
 }
 ```
@@ -191,13 +191,13 @@ interface Divider {
 }
 ```
 
-Interfaces can be either internal or external to your application. Apex code generation modules can make use of Annotations and Directives (described below) to generate either invokers (caller side) or handlers (callee side).
+Interfaces can be either internal or external to your application. Apexlang code generation modules can make use of Annotations and Directives (described below) to generate either invokers (caller side) or handlers (callee side).
 
 ### Object types
 
-The most basic component of a Apex schema are object types, which represent a kind of object you can pass to or return from operations, and what fields it has. Types are defined in a language-agnostic way. This means that complex features like nested structures, inheritance, and generics/templates are omitted by design.
+The most basic component of a Apexlang schema are object types, which represent a kind of object you can pass to or return from operations, and what fields it has. Types are defined in a language-agnostic way. This means that complex features like nested structures, inheritance, and generics/templates are omitted by design.
 
-In Apex, we might declare `Customer` like this:
+In Apexlang, we might declare `Customer` like this:
 
 ```apexlang
 type Customer {
@@ -232,7 +232,7 @@ enum PhoneType {
 }
 ```
 
-Each enum value denotes its programatic / variable name, the integer value that is serialized, and a display or friendly name for printing. Note that Apex does not address internationalization so custom code is required to print the value in multiple spoken languages.
+Each enum value denotes its programatic / variable name, the integer value that is serialized, and a display or friendly name for printing. Note that Apexlang does not address internationalization so custom code is required to print the value in multiple spoken languages.
 
 ### Union types
 
@@ -256,7 +256,7 @@ By default, code generation will treat `UUID` as a string. However, generators s
 
 ### Descriptions
 
-All elements in Apex can have descriptions which serve as documentation throughout the file. The code generation tools should also preserve descriptions as documentation/comments where appropriate so that you only need to worry about documenting functionality in one place.
+All elements in Apexlang can have descriptions which serve as documentation throughout the file. The code generation tools should also preserve descriptions as documentation/comments where appropriate so that you only need to worry about documenting functionality in one place.
 
 Descriptions can be a single line or multiple lines.
 
@@ -346,7 +346,7 @@ Directives improve the user experience of annotations by giving the developer us
 
 ### Imports
 
-Apex can integrate external modules using the `import` command. For example, OpenAPI annotations can be imported with the following statement:
+Apexlang can integrate external modules using the `import` command. For example, OpenAPI annotations can be imported with the following statement:
 
 ```apexlang
 import * from "@apexlang/openapi"
@@ -360,7 +360,7 @@ import { info, Contact, License } from "@apexlang/openapi"
 namespace "urlshortener.v1"
   @info(
     title: "Simple URL shortener API"
-    description: "Simple API for shortening URLs created using Apex."
+    description: "Simple API for shortening URLs created using Apexlang."
     version: "1.0.0"
     termsOfService: "https://api.goodcorp.com/terms/"
     contact: {

@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import styles from "./styles.module.css";
-import clsx from "clsx";
-import { LiveProvider, LiveEditor, LiveError } from "react-live";
-import CodeBlock from "@theme/CodeBlock";
-import theme from "prism-react-renderer/themes/vsDark";
-import { parse } from "@apexlang/core";
-import { Context, Writer } from "@apexlang/core/model";
+import React, { useState } from 'react';
+import styles from './styles.module.css';
+import clsx from 'clsx';
+import { LiveProvider, LiveEditor, LiveError } from 'react-live';
+import CodeBlock from '@theme/CodeBlock';
+import theme from 'prism-react-renderer/themes/vsDark';
+import { parse } from '@apexlang/core';
+import { Context, Writer } from '@apexlang/core/model';
 
-import { InterfacesVisitor as GoVisitor } from "@apexlang/codegen/go";
-import { RustBasic as RustVisitor } from "@apexlang/codegen/rust";
-import { JsonSchemaVisitor } from "@apexlang/codegen/json-schema";
-import { ProtoVisitor } from "@apexlang/codegen/proto";
-import { OpenAPIV3Visitor } from "@apexlang/codegen/openapiv3";
-import { InterfacesVisitor as TypeScriptVisitor } from "@apexlang/codegen/typescript";
-import { InterfacesVisitor as PythonVisitor } from "@apexlang/codegen/python";
+import { InterfacesVisitor as GoVisitor } from '@apexlang/codegen/go';
+import { RustBasic as RustVisitor } from '@apexlang/codegen/rust';
+import { JsonSchemaVisitor } from '@apexlang/codegen/json-schema';
+import { ProtoVisitor } from '@apexlang/codegen/proto';
+import { OpenAPIV3Visitor } from '@apexlang/codegen/openapiv3';
+import { InterfacesVisitor as TypeScriptVisitor } from '@apexlang/codegen/typescript';
+import { InterfacesVisitor as PythonVisitor } from '@apexlang/codegen/python';
 
 export function generate(doc, Visitor, config) {
   const context = new Context(config, doc);
@@ -155,8 +155,8 @@ export type Props = {
 
 const ApexEditor: React.FC<Props> = (props) => {
   const { className } = props;
-  const [parseError, updateParseError] = useState("");
-  const [state, updateState] = useState({ code: "", lang: "" });
+  const [parseError, updateParseError] = useState('');
+  const [state, updateState] = useState({ code: '', lang: '' });
   const [src, updateSrc] = useState(simpleExample);
 
   let apexSource = advancedExample;
@@ -169,10 +169,10 @@ const ApexEditor: React.FC<Props> = (props) => {
       console.warn(
         `Can not import apex files (i.e. '${name}') in this online editor`
       );
-      return "";
+      return '';
     });
 
-    const lang = (document.querySelector("#language") as HTMLSelectElement)
+    const lang = (document.querySelector('#language') as HTMLSelectElement)
       .value;
 
     const def = langDefs.find((def) => def.id === lang);
@@ -184,73 +184,73 @@ const ApexEditor: React.FC<Props> = (props) => {
   }
 
   let codeStyle = {
-    height: "550px",
-    overflow: "auto",
-    borderRadius: "4px",
+    height: '550px',
+    overflow: 'auto',
+    borderRadius: '4px',
   };
 
   let langDefs = [
     {
-      label: "Python",
-      lang: "python",
-      id: "python",
+      label: 'Python',
+      lang: 'python',
+      id: 'python',
       config: {
-        $filename: "interfaces.py",
+        $filename: 'interfaces.py',
       },
       visitor: PythonVisitor,
     },
     {
-      label: "Go",
-      lang: "go",
-      id: "golang",
+      label: 'Go',
+      lang: 'go',
+      id: 'golang',
       config: {
-        $filename: "interfaces.go",
+        $filename: 'interfaces.go',
       },
       visitor: GoVisitor,
     },
     {
-      label: "TypeScript",
-      lang: "typescript",
-      id: "typescript",
+      label: 'TypeScript',
+      lang: 'typescript',
+      id: 'typescript',
       config: {
-        $filename: "interfaces.ts",
+        $filename: 'interfaces.ts',
       },
       visitor: TypeScriptVisitor,
     },
     {
-      label: "Rust",
-      lang: "rust",
-      id: "rust",
+      label: 'Rust',
+      lang: 'rust',
+      id: 'rust',
       config: {
-        $filename: "interfaces.rs",
+        $filename: 'interfaces.rs',
       },
       visitor: RustVisitor,
     },
 
     {
-      label: "Proto3 Schema",
-      lang: "protobuf",
-      id: "protobuf",
+      label: 'Proto3 Schema',
+      lang: 'protobuf',
+      id: 'protobuf',
       config: {
-        $filename: "orders.proto",
+        $filename: 'orders.proto',
       },
       visitor: ProtoVisitor,
     },
     {
-      label: "OpenAPI v3",
-      lang: "yaml",
-      id: "openapi",
+      label: 'OpenAPI v3',
+      lang: 'yaml',
+      id: 'openapi',
       config: {
-        $filename: "orders.yaml",
+        $filename: 'orders.yaml',
       },
       visitor: OpenAPIV3Visitor,
     },
     {
-      label: "JSON Schema",
-      lang: "json",
-      id: "jsonschema",
+      label: 'JSON Schema',
+      lang: 'json',
+      id: 'jsonschema',
       config: {
-        $filename: "orders.json",
+        $filename: 'orders.json',
       },
       visitor: JsonSchemaVisitor,
     },
@@ -280,7 +280,7 @@ const ApexEditor: React.FC<Props> = (props) => {
         try {
           changed(src);
           codegen();
-          updateParseError("");
+          updateParseError('');
           return src;
         } catch (e) {
           console.error(e);
@@ -302,7 +302,7 @@ const ApexEditor: React.FC<Props> = (props) => {
 
   function changeSource(evt) {
     console.log(evt.target.value);
-    if (evt.target.value === "simple") {
+    if (evt.target.value === 'simple') {
       updateSrc(simpleExample);
     } else {
       updateSrc(advancedExample);
@@ -316,22 +316,22 @@ const ApexEditor: React.FC<Props> = (props) => {
           <div className="col col--6">
             <div className={styles.dropdown}>
               <h2>
-                Explore{" "}
+                With{' '}
                 <select id="example" onChange={changeSource}>
                   <option value="simple" key="simple">
-                    a Simple
+                    a Basic
                   </option>
                   <option value="advanced" key="advanced">
                     an Advanced
                   </option>
-                </select>{" "}
+                </select>{' '}
                 schema
               </h2>
             </div>
             {editor}
           </div>
           <div className="col col--6">
-            <div style={{ position: "relative" }}>
+            <div style={{ position: 'relative' }}>
               <div className={styles.dropdown}>
                 <h2>Generate</h2>
                 {dropdown}
@@ -339,7 +339,7 @@ const ApexEditor: React.FC<Props> = (props) => {
               <div style={codeStyle}>{codeblock}</div>
               <div
                 className={styles.error}
-                style={{ display: parseError ? "flex" : "none" }}
+                style={{ display: parseError ? 'flex' : 'none' }}
               >
                 <p>
                   Error in Apex source

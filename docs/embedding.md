@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-# Embedding Apex into Apps
+# Embedding Apexlang into Apps
 
-Apex is most commonly used as a code generator for your projects. In some cases, your system may need to read in the information contained in an Apex specification. This could be useful for platforms or tools to inspect specifications dynamically. Some scenarios include:
+Apexlang is most commonly used as a code generator for your projects. In some cases, your system may need to read in the information contained in an Apexlang specification. This could be useful for platforms or tools to inspect specifications dynamically. Some scenarios include:
 
 * Validating or sanitizing input data
 * Comparing two versions to detect a breaking change
@@ -12,24 +12,24 @@ Apex is most commonly used as a code generator for your projects. In some cases,
 
 ## Libraries
 
-Apex natively supports TypeScript and Go.
+Apexlang libraries exist for TypeScript and Go.
 
-* [@apexlang/core](https://github.com/apexlang/apex-js) - TypeScript Apex parser used by the CLI and VS Code extension
-* [@apexlang/codegen](https://github.com/apexlang/codegen) - TypeScript code generation modules loaded by the Apex CLI (e.g. `apex generate`)
-* [github.com/apexlang/apex-go](https://github.com/apexlang/apex-go) - Go Apex parser for embedding in Go platforms
+* [@apexlang/core](https://github.com/apexlang/apex-js) - TypeScript Apexlang parser used by the CLI and VS Code extension
+* [@apexlang/codegen](https://github.com/apexlang/codegen) - TypeScript code generation modules loaded by the `apex` CLI (e.g. `apex generate`)
+* [github.com/apexlang/apex-go](https://github.com/apexlang/apex-go) - Go Apexlang parser for embedding in Go platforms
 
 ## WebAssembly module
 
-To reach a broader set of languages, the Apex Go parser is also released as a WebAssembly module and loadable via a Wasm runtime such as [Wasmtime](https://wasmtime.dev). The module parses and validates an Apex specification and returns a JSON representation that is easier to interpret in languages with JSON support.
+To reach a broader set of languages, the Apexlang Go parser is also released as a WebAssembly module and loadable via a Wasm runtime such as [Wasmtime](https://wasmtime.dev). The module parses and validates an Apexlang specification and returns a JSON representation that is easier to interpret in languages with JSON support.
 
 ### Download
 
-Two implementations of the Wasm module can be downloaded from the [Apex Go releases page](https://github.com/apexlang/apex-go/releases).
+Two implementations of the Wasm module can be downloaded from the [Apexlang Go releases page](https://github.com/apexlang/apex-go/releases).
 
-* **[waPC](https://github.com/apexlang/apex-go/releases/latest/download/apex-wapc.wasm)** - Uses the [waPC protocol](https://wapc.io/docs/spec/) to invoke the Apex parser. This is the easiest method for integration, however you must be using a programming language that has a [waPC host implementation](https://github.com/wapc).
+* **[waPC](https://github.com/apexlang/apex-go/releases/latest/download/apex-wapc.wasm)** - Uses the [waPC protocol](https://wapc.io/docs/spec/) to invoke the Apexlang parser. This is the easiest method for integration, however you must be using a programming language that has a [waPC host implementation](https://github.com/wapc).
 * **[Core Wasm](https://github.com/apexlang/apex-go/releases/latest/download/apex-parser.wasm)** - Loadable by any programming language with a WebAssembly runtime (e.g. [Wasmtime](https://wasmtime.dev)); however, puts the responsibility of passing in the specification on your application.
 
-Each parser accepts an Apex specification as a string and returns the JSON string represention. The JSON follows [this schema](https://github.com/apexlang/apex-go/blob/main/model.apexlang).
+Each parser accepts an Apexlang specification as a string and returns the JSON string represention. The JSON follows [this schema](https://github.com/apexlang/apex-go/blob/main/model.apexlang).
 
 ### waPC <small>(apex-wapc.wasm)</small>
 
@@ -41,7 +41,7 @@ Input formatted as [MsgPack](https://msgpack.org)
 
 ```json
 {
-  "source": "... Apex specification as string ..."
+  "source": "... Apexlang specification as string ..."
 }
 ```
 
@@ -49,7 +49,7 @@ Output formatted as [MsgPack](https://msgpack.org)
 
 ```json
 {
-  "namespace": { /* The parsed Apex namespace. See model spec. */ },
+  "namespace": { /* The parsed Apexlang namespace. See model spec. */ },
   /* or */
   "errors": [
     {
@@ -86,7 +86,7 @@ Input formatted as [MsgPack](https://msgpack.org)
 
 The Wasm module exposes 3 functions:
 
-* `_malloc(size u32) u32` - Allocate memory to pass in Apex specifications
+* `_malloc(size u32) u32` - Allocate memory to pass in Apexlang specifications
 * `_free(ptr u32)` - Free memory allocated by `_malloc`
 * `parse(ptr u32, size u32) u64` - The main parse function that returns a valid JSON representation
 
@@ -101,24 +101,24 @@ ptr := uintptr(ptrsize >> 32)
 size := uint32(ptrsize & 0xFFFFFFFF)
 ```
 
-Embedding Apex parsing in your application follows these steps:
+Embedding Apexlang parsing in your application follows these steps:
 
-1. calls `_malloc` to receive a buffer for the byte count of the Apex specification
-2. copies or directly load the Apex specification into the allocated buffer
+1. calls `_malloc` to receive a buffer for the byte count of the Apexlang specification
+2. copies or directly load the Apexlang specification into the allocated buffer
 3. calls `parse` with the buffer pointer and size
 4. extract the JSON (or error) string from the buffer returned
 5. call `_free` to release the memory allocated by `_malloc` in step 1
 
-If the returned string starts with `error:` then the string represents and error in the parser. Otherwise, it contains a valid JSON representation of your Apex specification.
+If the returned string starts with `error:` then the string represents and error in the parser. Otherwise, it contains a valid JSON representation of your Apexlang specification.
 
 #### Resolving imports
 
 If a specification contains imports, the module makes a host call to `apex::resolve` to retrieve the contents of the imported specification.
 
-* `resolve(location_ptr u32, location_size u32, from_ptr u32, from_size u32) u64` - Loads an imported Apex specification
+* `resolve(location_ptr u32, location_size u32, from_ptr u32, from_size u32) u64` - Loads an imported Apexlang specification
 
-`location` and `from` are string values. `location` is the specification to load and `from` is the specification performing the import. The Apex CLI installs importable definitions in `~/.apex/definitions` your implementation could load them from alternate locations.
+`location` and `from` are string values. `location` is the specification to load and `from` is the specification performing the import. The `apex` CLI installs importable definitions in `~/.apex/definitions` your implementation could load them from alternate locations.
 
 #### Example
 
-[Here is an example](https://github.com/apexlang/apex-go/blob/main/cmd/host/main.go) using [wazero](https://wazero.io/) to invoke the Apex parser.
+[Here is an example](https://github.com/apexlang/apex-go/blob/main/cmd/host/main.go) using [wazero](https://wazero.io/) to invoke the Apexlang parser.
