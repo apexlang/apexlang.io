@@ -2,11 +2,17 @@ import React from 'react';
 import clsx from 'clsx';
 import styles from './styles.module.css';
 
-const apexCmd = { fontFamily: 'monospace', fontSize: '14pt' };
+const apexCmd = {
+  fontFamily: 'monospace',
+  fontSize: '14pt',
+  fontWeight: 'bold',
+  backgroundColor: '#f5f5f5',
+  padding: '0 5px',
+};
 
 const FeatureList = [
   {
-    title: 'Project Templates',
+    title: 'Project Bootstrapper',
     Svg: require('@site/static/img/02-protocol-agnostic.svg').default,
     url: '/docs/customization/project-templates',
     description: (
@@ -28,7 +34,7 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Code Generators',
+    title: 'Code Generator',
     Svg: require('@site/static/img/03-extensible.svg').default,
     url: '/docs/tutorial/create-a-spec',
     description: (
@@ -67,6 +73,11 @@ export default function HomepageFeatures() {
   return (
     <section className={styles.features}>
       <div className="container">
+        <div className="row">
+          <div className="col text--center">
+            <h1>What is Apex?</h1>
+          </div>
+        </div>
         <div className="row">
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
