@@ -5,7 +5,7 @@ title: Generate API Specs
 
 # Generate API Specifications
 
-We have configured Apex to generate an OpenAPI specification for our **URL Shortener** service. Now its time to perform the generation using the `apex` CLI.
+We have configured Apexlang to generate an OpenAPI specification for our **URL Shortener** service. Now its time to perform the generation using the `apex` CLI.
 
 ## Running the code generator
 
@@ -28,7 +28,7 @@ Running `apex generate apex.yaml` will create `openapi.yaml` containing the Open
 openapi: 3.1.0
 info:
   title: Simple URL shortener API
-  description: Simple API for shortening URLs created using Apex.
+  description: Simple API for shortening URLs created using Apexlang.
   version: 1.0.0
   termsOfService: 'https://api.goodcorp.com/terms/'
   contact:
@@ -106,11 +106,11 @@ components:
 
 :::info
 
-Approximately 40 lines of Apex generates around 80 lines of OpenAPI YAML.
+Approximately 40 lines of Apexlang generates around 80 lines of OpenAPI YAML.
 
 :::
 
-In addition to OpenAPI, Apex also generated the gRPC service defintion in `proto/service.proto`.
+In addition to OpenAPI, `apex` also generated the gRPC service defintion in `proto/service.proto`.
 
 ```protobuf title="proto/service.proto" showLineNumbers
 syntax = "proto3";

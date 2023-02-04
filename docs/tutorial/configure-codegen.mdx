@@ -7,13 +7,13 @@ import TabItem from '@theme/TabItem';
 
 # Configure Code Generation
 
-## Understanding Apex configuration
+## Understanding `apex` configuration
 
-An Apex configuration is YAML that defines which files are generated and by which module. The structure of configuration file is conveyed in Apex and JSON schema below.
+An `apex` configuration is YAML that defines which files are generated and by which module. The structure of configuration file is conveyed in Apexlang and JSON schema below.
 
 <Tabs
   values={[
-    {label: 'Apex', value: 'apex'},
+    {label: 'Apexlang', value: 'apex'},
     {label: 'JSON schema', value: 'jsonschema'},
   ]}>
   <TabItem value="apex">
@@ -61,7 +61,7 @@ type Command {
 {
   "$id": "https://apexlang.io/schemas/configuration.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Apex Configuration File Schema",
+  "title": "Apexlang Configuration File Schema",
   "$ref": "#/$defs/Configuration",
   "$defs": {
     "Configuration": {
@@ -87,10 +87,7 @@ type Command {
           }
         }
       },
-      "required": [
-        "schema",
-        "generates"
-      ]
+      "required": ["schema", "generates"]
     },
     "Target": {
       "properties": {
@@ -122,10 +119,7 @@ type Command {
           }
         }
       },
-      "required": [
-        "module",
-        "visitorClass"
-      ]
+      "required": ["module", "visitorClass"]
     },
     "Command": {
       "properties": {
@@ -138,9 +132,7 @@ type Command {
           "type": "string"
         }
       },
-      "required": [
-        "command"
-      ]
+      "required": ["command"]
     }
   }
 }
@@ -149,7 +141,7 @@ type Command {
   </TabItem>
 </Tabs>
 
-## Create your first Apex configuration
+## Create your first `apex.yaml` configuration
 
 A common task with regard to API and microservice development is sharing [OpenAPI](https://swagger.io/specification/) and [gRPC](https://grpc.io/docs/what-is-grpc/core-concepts/#service-definition) specifications with other teams. In this next step, we will generate the specifications for our **URL Shortener** service. In the root of your `urlshortener` directory, create a file named `apex.yaml`:
 

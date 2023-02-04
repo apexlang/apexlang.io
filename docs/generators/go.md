@@ -37,7 +37,7 @@ generates:
 | Field                   | Description                                   |
 | ----------------------- | --------------------------------------------- |
 | `package` (common)      | The name of the Go package                    |
-| `aliases`               | Maps Apex aliases to specific Go types        |
+| `aliases`               | Maps Apexlang aliases to specific Go types        |
 
 #### Callbacks
 
@@ -51,10 +51,10 @@ generates:
 | Class                   | Description                                   | Override function(s) |
 | ----------------------- | --------------------------------------------- |-------------------|
 | [`ImportsVisitor`](https://github.com/apexlang/codegen/blob/main/src/go/imports_visitor.ts) | Writes the imports required by the `.go` file. | `importsVisitor` |
-| [`InterfaceVisitor`](https://github.com/apexlang/codegen/blob/main/src/go/interface_visitor.ts) | Writes an Go interface for all `@service` and `@dependency` Apex interfaces. | `serviceVisitor`, `dependencyVisitor` |
-| [`StructVisitor `](https://github.com/apexlang/codegen/blob/main/src/go/struct_visitor.ts) | Writes a simple Go struct for Apex types. | `structVisitor` |
+| [`InterfaceVisitor`](https://github.com/apexlang/codegen/blob/main/src/go/interface_visitor.ts) | Writes an Go interface for all `@service` and `@dependency` Apexlang interfaces. | `serviceVisitor`, `dependencyVisitor` |
+| [`StructVisitor `](https://github.com/apexlang/codegen/blob/main/src/go/struct_visitor.ts) | Writes a simple Go struct for Apexlang types. | `structVisitor` |
 | [`EnumVisitor`](https://github.com/apexlang/codegen/blob/main/src/go/enum_visitor.ts) | Writes an enum using `const` and various `func`s. | `enumVisitor` |
-| [`UnionVisitor`](https://github.com/apexlang/codegen/blob/main/src/go/union_visitor.ts) | Writes an Apex union as a Go struct with optional fields for each declared type. | `unionVisitor` |
+| [`UnionVisitor`](https://github.com/apexlang/codegen/blob/main/src/go/union_visitor.ts) | Writes an Apexlang union as a Go struct with optional fields for each declared type. | `unionVisitor` |
 | [`AliasVisitor`](https://github.com/apexlang/codegen/blob/main/src/go/alias_visitor.ts) | Writes an alias type to map to an internal or third-party Go type (e.g. UUID) | `aliasVisitor` |
 
 ## MainVisitor
