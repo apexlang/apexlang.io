@@ -129,11 +129,11 @@ import (
 	"github.com/go-logr/logr"
 )
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+var (
+	randNum = rand.New(rand.NewSource(time.Now().UnixNano()))
+)
 
 type ShortenerImpl struct {
 	log        logr.Logger
@@ -190,7 +190,7 @@ func (s *ShortenerImpl) Lookup(ctx context.Context, id string) (*URL, error) {
 func generateID(n int) string {
 	b := make([]byte, n)
 	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+		b[i] = letterBytes[randNum.Intn(len(letterBytes))]
 	}
 	return string(b)
 }
