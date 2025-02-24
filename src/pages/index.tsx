@@ -75,18 +75,6 @@ function HomepageHeader() {
 }
 
 function Installation() {
-  const [cmd, setInstallCommand] = useState('Loading...');
-
-  function makeInstallCommand(version: string) {
-    return `deno install -A --unstable -f -n apex https://deno.land/x/apex_cli@${version}/apex.ts`;
-  }
-
-  fetch('https://api.github.com/repos/apexlang/apex/releases?per_page=1')
-    .then((res) => res.json())
-    .then((res) => {
-      console.log(res);
-      setInstallCommand(makeInstallCommand(res[0].tag_name));
-    });
   return (
     <div>
       <div className="col text--center">
@@ -95,7 +83,7 @@ function Installation() {
         <p>Get Apex by running the following command</p>
       </div>
       <CodeBlock className="codeBlock" language="shell">
-        {cmd}
+        deno install -g -A --unstable-worker-options -f -n apex jsr:@apexlang/apex
       </CodeBlock>
     </div>
   );

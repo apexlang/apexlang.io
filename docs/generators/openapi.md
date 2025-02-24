@@ -20,7 +20,7 @@ This visitor creates a valid [Swagger/OpenAPI v3 specification](https://swagger.
 ```yaml
 generates:
   openapi.yaml:
-    module: 'https://deno.land/x/apex_codegen@v0.1.9/openapiv3/mod.ts'
+    module: 'jsr:@apexlang/codegen/openapiv3'
     visitorClass: OpenAPIV3Visitor
 ```
 
