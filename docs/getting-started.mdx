@@ -20,7 +20,7 @@ The command line interface is a single binary that generates code from Apexlang 
 The `apex` CLI is installed from the terminal/command prompt by executing the command below.
 
 ```shell
-deno install -A --unstable -f -n apex https://deno.land/x/apex_cli/apex.ts
+deno install -g -A --unstable-worker-options -f -n apex jsr:@apexlang/apex
 ```
 
 ```shell
@@ -30,21 +30,31 @@ apex --help
 Output:
 
 ```
-  Usage:   apex
-  Version: 0.0.2
-  Description:
-    A code generation tool using Apexlang, an interface definition language (IDL) for modeling software.
-  Options:
-    -h, --help  - Show this help.
-  Commands:
-    new          <template> <dir>    - Create a new project directory using a template.
-    init         <template>          - Initialize a project using a template.
-    generate     [configuration...]  - Run apex generators from a given configuration.
-    list                             - List available resources.
-    watch        [configuration...]  - Watch apex configuration for changes and trigger code generation.
-    upgrade                          - Upgrade apex executable to latest or given version.
-    help         [command]           - Show this help or the help of a sub-command.
-    completions                      - Generate shell completions.
+Usage:   apex 
+Version: 0.2.3
+
+Description:
+
+  A complete project tool suite based on Apexlang, an interface definition language (IDL) for modeling software.
+
+Options:
+
+  -h, --help     - Show this help.                            
+  -V, --version  - Show the version number for this program.  
+
+Commands:
+
+  install      <location>          - Install templates locally.                                  
+  new          <template> <dir>    - Create a new project directory using a template.            
+  init         <template>          - Initialize a project using a template.                      
+  generate     [configuration...]  - Run Apexlang generators from a given configuration.         
+  list                             - List available resources.                                   
+  describe                         - Describe available resources.                               
+  watch        [configuration...]  - Watch configuration for changes and trigger code generation.
+  run          [tasks...]          - Run tasks.                                                  
+  upgrade                          - Upgrade apex executable to latest or given version.         
+  help         [command]           - Show this help or the help of a sub-command.                
+  completions                      - Generate shell completions.  
 ```
 
 ### VS Code extension for the Apexlang IDL
